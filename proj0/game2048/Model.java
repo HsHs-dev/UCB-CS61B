@@ -5,7 +5,8 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author Hassan Siddig
+ *  Date: 29-5-2025
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -114,6 +115,8 @@ public class Model extends Observable {
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
 
+
+
         checkGameOver();
         if (changed) {
             setChanged();
@@ -137,7 +140,13 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+
+        for (int row = 0; row < b.size(); row++) {
+            for (int col = 0; col < b.size(); col++) {
+                if (b.tile(col, row) == null) return true;
+            }
+        }
+
         return false;
     }
 
@@ -147,7 +156,14 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+
+        for (int row = 0; row < b.size(); row++) {
+            for (int col = 0; col < b.size(); col++) {
+                if (b.tile(col,row) == null) continue;
+                if (b.tile(col, row).value() == MAX_PIECE) return true;
+            }
+        }
+
         return false;
     }
 
@@ -158,7 +174,19 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+
+        if (emptySpaceExists(b)) return true;
+
+        for (int row = 0; row < b.size(); row++) {
+            for (int col = 0; col < b.size(); col++) {
+               boolean up = lookUp(row, col, b.tile(col, row).value());
+               boolean down = lookDown();
+               boolean left = lookLeft();
+               boolean right = lookRight();
+            }
+            if (up || down || left || right) return true;
+        }
+
         return false;
     }
 
@@ -200,4 +228,17 @@ public class Model extends Observable {
     public int hashCode() {
         return toString().hashCode();
     }
+}
+
+/*
+* THE FOLLOWING ARE MY OWN HELPER METHODS
+*/
+
+/**
+ * Check if the tile above is lookable (doesn't exceed the grid boundaries) and
+ * if it equals the current tile.
+ * @param t tile
+ */
+private static boolean lookUp(int row, int col, int val) {
+
 }
