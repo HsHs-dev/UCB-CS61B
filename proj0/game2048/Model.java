@@ -141,6 +141,7 @@ public class Model extends Observable {
         boolean changed;
         changed = false;
         boolean merged = false;
+        board.setViewingPerspective(side);
 
         for (int col = 0; col < board.size(); col++) {
             for (int row = 0; row < board.size(); row++) {
@@ -150,7 +151,7 @@ public class Model extends Observable {
                 if (tile == null) continue;
 
                 int newRow = row + 1;
-                if (newRow < 4) {
+                if (newRow < board.size()) {
 
                     if (board.tile(col, newRow) == null) {
                         board.move(col, newRow, tile);
@@ -176,6 +177,8 @@ public class Model extends Observable {
             }
 
         }
+
+        board.setViewingPerspective(Side.NORTH);
 
         checkGameOver();
         if (changed) {
