@@ -140,11 +140,42 @@ public class Model extends Observable {
     public boolean tilt(Side side) {
         boolean changed;
         changed = false;
+        boolean merged = false;
 
-        // TODO: Modify this.board (and perhaps this.score) to account
-        // for the tilt to the Side SIDE. If the board changed, set the
-        // changed local variable to true.
+        for (int col = 0; col < board.size(); col++) {
+            for (int row = 0; row < board.size(); row++) {
 
+
+                Tile tile = board.tile(col, row);
+                if (tile == null) continue;
+
+                int newRow = row + 1;
+                if (newRow < 4) {
+
+                    if (board.tile(col, newRow) == null) {
+                        board.move(col, newRow, tile);
+                        changed = true;
+                        continue;
+                    }
+
+                    if (merged) {
+                        merged = false;
+                        continue;
+                    }
+
+                    if (board.tile(col, newRow).value() == tile.value()) {
+                        board.move(col, newRow, tile);
+                        changed = true;
+                        score += tile.value() * 2;
+                        merged = true;
+                    }
+
+                }
+
+
+            }
+
+        }
 
         checkGameOver();
         if (changed) {
@@ -174,8 +205,8 @@ public class Model extends Observable {
      */
     public static boolean emptySpaceExists(Board b) {
 
-        for (int row = 0; row < b.size(); row++) {
-            for (int col = 0; col < b.size(); col++) {
+        for (int col = 0; col < b.size(); col++) {
+            for (int row = 0; row < b.size(); row++) {
                 if (b.tile(col, row) == null) return true;
             }
         }
@@ -190,8 +221,8 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
 
-        for (int row = 0; row < b.size(); row++) {
-            for (int col = 0; col < b.size(); col++) {
+        for (int col = 0; col < b.size(); col++) {
+            for (int row = 0; row < b.size(); row++) {
                 if (b.tile(col, row) == null) continue;
                 if (b.tile(col, row).value() == MAX_PIECE) return true;
             }
@@ -208,19 +239,21 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
 
+        // at least one empty space on the board exists
         if (emptySpaceExists(b)) return true;
 
+        // There are two adjacent tiles with the same value
         boolean up = false;
         boolean down = false;
         boolean left = false;
         boolean right = false;
 
-        for (int row = 0; row < b.size(); row++) {
-            for (int col = 0; col < b.size(); col++) {
-                up = look(row, col, b, Directions.UP);
-                down = look(row, col, b, Directions.DOWN);
-                left = look(row, col, b, Directions.LEFT);
-                right = look(row, col, b, Directions.RIGHT);
+        for (int col = 0; col < b.size(); col++) {
+            for (int row = 0; row < b.size(); row++) {
+                up = look(col, row, b, Directions.UP);
+                down = look(col, row, b, Directions.DOWN);
+                left = look(col, row, b, Directions.LEFT);
+                right = look(col, row, b, Directions.RIGHT);
 
                 if (up || down || left || right) return true;
             }
@@ -268,6 +301,7 @@ public class Model extends Observable {
         return toString().hashCode();
     }
 
+
     /******************************************
     * THE FOLLOWING ARE MY WON HELPER METHODS *
     ******************************************/
@@ -281,9 +315,9 @@ public class Model extends Observable {
 
        final int dRow, dCol;
 
-       Directions(int dRow, int dCol) {
-           this.dRow = dRow;
+       Directions(int dCol, int dRow) {
            this.dCol = dCol;
+           this.dRow = dRow;
        }
 
     }
@@ -292,13 +326,13 @@ public class Model extends Observable {
      * Check adjacent tile if it is equal to the current tile
      * @param row current tile's row
      * @param col current tile's column
-     * @param b current borad
+     * @param b current board
      * @param dir Direction enum that specify the direction to look at
      * @return true if any adjacent tile is equal to the current tile
      */
-    private static boolean look(int row, int col, Board b, Directions dir) {
-        int newRow = row + dir.dRow;
+    private static boolean look(int col, int row, Board b, Directions dir) {
         int newCol = col + dir.dCol;
+        int newRow = row + dir.dRow;
 
         // board boundaries check
         if (newRow < 0 || newRow > 3 || newCol < 0 || newCol > 3) return false;
@@ -306,4 +340,9 @@ public class Model extends Observable {
         return b.tile(col, row).value() == b.tile(newCol, newRow).value();
 
     }
+
+    private  static boolean validBoundry(int row) {
+        return row < 3;
+    }
+
 }
