@@ -10,4 +10,4 @@ I am taking the 2021 version of the course, because the made the [autograder](ht
 
 ## Projects
 
-- [x] Project 0
+- [x] Project 0: 2048 Game
