@@ -140,42 +140,43 @@ public class Model extends Observable {
     public boolean tilt(Side side) {
         boolean changed;
         changed = false;
-        boolean merged = false;
+
         board.setViewingPerspective(side);
 
+        // loop over all tiles
         for (int col = 0; col < board.size(); col++) {
-            for (int row = 0; row < board.size(); row++) {
+            // prevents multiple merges per row (if a merge happened at this row, don't merge again)
+            // @source ChatGPT
+            int lastMergedRow = board.size();
+            for (int row = board.size() - 2; row >= 0; row--) {
 
+                // skip empty tiles
+                if (board.tile(col, row) == null) continue;
 
-                Tile tile = board.tile(col, row);
-                if (tile == null) continue;
+                // process a single tile
+                int currentRow, aboveRow;
+                for (currentRow = row, aboveRow = currentRow + 1; aboveRow < board.size(); aboveRow++, currentRow++) {
 
-                int newRow = row + 1;
-                if (newRow < board.size()) {
-
-                    if (board.tile(col, newRow) == null) {
-                        board.move(col, newRow, tile);
-                        changed = true;
+                    Tile tile = board.tile(col, currentRow);
+                    Tile tileAbove = board.tile(col, aboveRow);
+                    if (tileAbove == null) {
+                        board.move(col, aboveRow, tile);
                         continue;
                     }
 
-                    if (merged) {
-                        merged = false;
-                        continue;
-                    }
-
-                    if (board.tile(col, newRow).value() == tile.value()) {
-                        board.move(col, newRow, tile);
-                        changed = true;
+                    if (tile.value() == tileAbove.value() && aboveRow < lastMergedRow) {
+                        // set merge to true and move
+                        board.move(col, aboveRow, tile);
+                        // to allow merges under this row
+                        lastMergedRow = aboveRow;
                         score += tile.value() * 2;
-                        merged = true;
-                    }
-
+                    } else
+                        // no more move can be curried
+                        break;
                 }
 
-
+                changed = true;
             }
-
         }
 
         board.setViewingPerspective(Side.NORTH);
