@@ -8,12 +8,14 @@ public class IntListExercises {
      *
      * @param lst IntList from Lecture
      */
+    // The bug was that the last element was skipped
     public static void addConstant(IntList lst, int c) {
         IntList head = lst;
-        while (head.rest != null) {
+        while (head != null) {
             head.first += c;
             head = head.rest;
         }
+
     }
 
     /**
@@ -23,6 +25,7 @@ public class IntListExercises {
      *
      * @param L IntList from Lecture
      */
+    // The bug was in firstDigitEqualsLastDigit
     public static void setToZeroIfMaxFEL(IntList L) {
         IntList p = L;
         while (p != null) {
@@ -49,9 +52,10 @@ public class IntListExercises {
     /** Returns true if the last digit of x is equal to
      *  the first digit of x.
      */
+    // The bug was that 10 wasn't handled properly. while (x > 10)
     public static boolean firstDigitEqualsLastDigit(int x) {
         int lastDigit = x % 10;
-        while (x > 10) {
+        while (x >= 10) {
             x = x / 10;
         }
         int firstDigit = x % 10;
@@ -65,6 +69,11 @@ public class IntListExercises {
      * @param lst IntList from Lecture
      * @return True if there was an update to the list
      */
+    /*
+    The bug was in the return statement, if the list has more than one prime,
+    it will square the first one, and then due to shorthand OR, the method will return before checking
+    any additional primes
+    */
     public static boolean squarePrimes(IntList lst) {
         // Base Case: we have reached the end of the list
         if (lst == null) {
@@ -77,6 +86,6 @@ public class IntListExercises {
             lst.first *= lst.first;
         }
 
-        return currElemIsPrime || squarePrimes(lst.rest);
+        return squarePrimes(lst.rest) || currElemIsPrime;
     }
 }

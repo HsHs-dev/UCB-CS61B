@@ -1,6 +1,5 @@
 package game2048;
 
-import java.util.Dictionary;
 import java.util.Formatter;
 import java.util.Observable;
 
@@ -343,10 +342,6 @@ public class Model extends Observable {
 
         return b.tile(col, row).value() == b.tile(newCol, newRow).value();
 
-    }
-
-    private  static boolean validBoundry(int row) {
-        return row < 3;
     }
 
 }
