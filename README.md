@@ -19,7 +19,8 @@ Data Structures and Algorithms are a vital subject to elevate your programming s
 
 ## Labs
 
-- [ ] Debugging
+- [x] Lab 1 Setup: Setting Up Your Computer
+- [x] Lab 2: JUnit Tests and Debugging
 
 ## Projects
 
