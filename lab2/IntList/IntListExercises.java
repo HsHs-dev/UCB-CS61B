@@ -71,7 +71,7 @@ public class IntListExercises {
      */
     /*
     The bug was in the return statement, if the list has more than one prime,
-    it will square the first one, and then due to shorthand OR, the method will return before checking
+    it will square the first one, and then due to short-circuit logical OR, the method will return before checking
     any additional primes
     */
     public static boolean squarePrimes(IntList lst) {
