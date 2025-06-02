@@ -1,52 +1,58 @@
-public class SLList {
+public class SLList <T> {
 
-//    private IntNode first;
-    /** The first item if it exists, it will be in sentinel.next */
-    private IntNode sentinel;
-    private int size;
+    private class Node {
 
-    public SLList() {
-        sentinel = new IntNode(7, null);
-        size = 0;
+        public T item;
+        public Node next;
+
+        public Node(T i, Node n) {
+            item = i;
+            next = n;
+        }
+
     }
 
+//    private Node first;
+    /** The first item if it exists, it will be in first.next */
+    private Node first;
+    private int size;
 
-    public SLList(int x) {
-        sentinel = new IntNode(7, null);
-        sentinel.next = new IntNode(x, null);
+    public SLList(T x) {
+        first = new Node(x, null);
+        first.next = new Node(x, null);
         size = 1;
     }
 
-    public void addFirst(int x) {
-        sentinel.next = new IntNode(x, sentinel.next);
+    public void addFirst(T x) {
+        first.next = new Node(x, first.next);
         size++;
     }
 
-    public int getFirst() {
-        return sentinel.next.item;
+    public T getFirst() {
+        return first.next.item;
     }
 
-    public void addLast(int x) {
+    public void addLast(T x) {
         size++;
         // ugly
 //        if (first == null) {
-//            first = new IntNode(x, null);
+//            first = new Node(x, null);
 //            return;
 //        }
-        IntNode node = sentinel;
+        Node node = first;
         while (node.next != null) {
             node = node.next;
         }
-        node.next = new IntNode(x, null);
+        node.next = new Node(x, null);
     }
     /*
     @source JHug
     public void addLast(int x) {
-      IntNode node = first;
+      Node node = first;
       while (node.next != null) {
         node = node.next;
       }
-      node.next = new IntNode(x, null);
+      node.next = new Node(x, null);
     }
     */
 
@@ -58,7 +64,7 @@ public class SLList {
     // O(n)
     // public int size() {
     //     int size = 1;
-    //     IntNode node = first.next;
+    //     Node node = first.next;
     //     while (node != null) {
     //         size++;
     //         node = node.next;
@@ -68,8 +74,8 @@ public class SLList {
 
     /*
     @source JHug
-    // Returns the size of list that starts at IntNode node.
-    private static int size(IntNode node) {
+    // Returns the size of list that starts at Node node.
+    private static int size(Node node) {
       if (node.next == null) return 1;
       return 1 + size(node.next);
     }
@@ -80,8 +86,8 @@ public class SLList {
     */
 
     public String print() {
-        String list = sentinel.next.item + " -> ";
-        IntNode node = sentinel.next.next;
+        String list = first.next.item + " -> ";
+        Node node = first.next.next;
         while (node.next != null) {
             list += node.item + " -> ";
             node = node.next;
@@ -90,13 +96,4 @@ public class SLList {
         return list;
     }
 
-    public static void main(String[] args) {
-        SLList L = new SLList();
-        L.addLast(7);
-        L.addFirst(66);
-
-        System.out.println(L.print());
-        System.out.println(L.size);
-    }
-    
 }
