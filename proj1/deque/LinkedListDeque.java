@@ -149,4 +149,12 @@ public class LinkedListDeque<T> {
         }
     }
 
+    /**
+     * @param index index of the target item
+     * @return the item at the index place
+     */
+//    public T getRecursive(int index) {
+//        // TODO
+//    }
+
 }
