@@ -76,7 +76,7 @@ public class ArrayDeque<T> {
      * @return the first item from the deque
      */
     public T removeFirst() {
-        if (checkUsage()) skrink(list.length / 4);
+        if (checkUsage()) shrink();
         T first = list[firstIndex];
         list[firstIndex] = null;
         firstIndex++;
@@ -90,7 +90,7 @@ public class ArrayDeque<T> {
      * @return the last item from the deque
      */
     public T removeLast() {
-        if (checkUsage()) shrink(list.length / 4);
+        if (checkUsage()) shrink();
         T last = list[lastIndex];
         list[lastIndex] = null;
         lastIndex--;
@@ -118,6 +118,9 @@ public class ArrayDeque<T> {
         lastIndex = getLastIndex();
     }
 
+    /**
+     * @return the index of the first element
+     */
     private int getFirstIndex() {
         int first = 0;
         while (list[first] == null) {
@@ -127,7 +130,7 @@ public class ArrayDeque<T> {
     }
 
     /**
-     * @return the index of the last available space
+     * @return the index of the last element
      */
     private int getLastIndex() {
         int last = list.length - 1;
@@ -143,6 +146,14 @@ public class ArrayDeque<T> {
      */
     private boolean checkUsage() {
         return size < (list.length / 4) && (size > 8);
+    }
+
+    private void shrink() {
+        T[] a = (T[]) new Object[list.length / 4];
+        System.arraycopy(list, firstIndex, a, 0, size);
+        list = a;
+        firstIndex = getFirstIndex();
+        lastIndex = getLastIndex();
     }
 
     public static void main(String[] args) {
