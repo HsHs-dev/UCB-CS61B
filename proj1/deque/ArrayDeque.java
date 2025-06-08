@@ -76,7 +76,9 @@ public class ArrayDeque<T> {
      * @return the first item from the deque
      */
     public T removeFirst() {
-        if (isEmpty()) return null;
+        if (isEmpty()) {
+            return null;
+        }
         if (checkUsage()) shrink();
         T first = list[firstIndex];
         list[firstIndex] = null;
@@ -91,7 +93,9 @@ public class ArrayDeque<T> {
      * @return the last item from the deque
      */
     public T removeLast() {
-        if (isEmpty()) return null;
+        if (isEmpty()) {
+            return null;
+        }
         if (checkUsage()) shrink();
         T last = list[lastIndex];
         list[lastIndex] = null;

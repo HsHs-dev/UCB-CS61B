@@ -1,7 +1,5 @@
 package deque;
 
-import com.sun.nio.sctp.SendFailedNotification;
-
 public class LinkedListDeque<T> {
 
     private class Node {
@@ -9,7 +7,7 @@ public class LinkedListDeque<T> {
         T item;
         Node next;
 
-        public Node(Node prev, T item, Node next) {
+        private Node(Node prev, T item, Node next) {
             this.prev = prev;
             this.item = item;
             this.next = next;
@@ -110,7 +108,9 @@ public class LinkedListDeque<T> {
      * @return last item from the deque
      */
     public T removeLast() {
-        if (size == 0) return null;
+        if (size == 0) {
+            return null;
+        }
         T item = sentinel.prev.item;
         Node last = sentinel.prev;
         sentinel.prev.prev.next = sentinel;
@@ -125,7 +125,9 @@ public class LinkedListDeque<T> {
      * @return the item at the index place
      */
     public T get(int index) {
-        if (size == 0) return null;
+        if (size == 0) {
+            return null;
+        }
         int target = index;
         int counter;
         Node node;
