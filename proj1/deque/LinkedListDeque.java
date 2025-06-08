@@ -127,7 +127,7 @@ public class LinkedListDeque<T> {
      * @return the item at the index place
      */
     public T get(int index) {
-        if (size == 0) {
+        if (isEmpty() || index < 0 || index >= size) {
             return null;
         }
         int target = index;
@@ -141,7 +141,6 @@ public class LinkedListDeque<T> {
                 node = node.next;
                 counter++;
             }
-            return node.item;
         } else {
             counter = size - 1;
             node = sentinel.prev;
@@ -149,8 +148,8 @@ public class LinkedListDeque<T> {
                 node = node.prev;
                 counter--;
             }
-            return node.item;
         }
+        return node.item;
     }
 
     /**
@@ -168,15 +167,6 @@ public class LinkedListDeque<T> {
             return node.item;
         }
         return getRecursive(node.next, index - 1);
-    }
-
-    public static void main(String[] args) {
-        LinkedListDeque<Integer> list = new LinkedListDeque<>();
-        list.addFirst(5);
-        list.addFirst(6);
-        list.addFirst(7);
-        list.addFirst(8);
-        System.out.println(list.getRecursive(-1));
     }
 
 }
