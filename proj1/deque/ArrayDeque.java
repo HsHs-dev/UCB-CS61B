@@ -76,6 +76,7 @@ public class ArrayDeque<T> {
      * @return the first item from the deque
      */
     public T removeFirst() {
+        if (isEmpty()) return null;
         if (checkUsage()) shrink();
         T first = list[firstIndex];
         list[firstIndex] = null;
@@ -90,6 +91,7 @@ public class ArrayDeque<T> {
      * @return the last item from the deque
      */
     public T removeLast() {
+        if (isEmpty()) return null;
         if (checkUsage()) shrink();
         T last = list[lastIndex];
         list[lastIndex] = null;
@@ -112,7 +114,7 @@ public class ArrayDeque<T> {
      */
     private void resize(int factor) {
         T[] a = (T[]) new Object[factor];
-        System.arraycopy(list, 0, a, a.length / 4, size);
+        System.arraycopy(list, firstIndex, a, a.length / 4, size);
         list = a;
         firstIndex = getFirstIndex();
         lastIndex = getLastIndex();
@@ -148,69 +150,15 @@ public class ArrayDeque<T> {
         return size < (list.length / 4) && (size > 8);
     }
 
+    /**
+     * Shrink the array to 25% of its original length
+     */
     private void shrink() {
         T[] a = (T[]) new Object[list.length / 4];
         System.arraycopy(list, firstIndex, a, 0, size);
         list = a;
         firstIndex = getFirstIndex();
         lastIndex = getLastIndex();
-    }
-
-    public static void main(String[] args) {
-        ArrayDeque<String> alpha = new ArrayDeque<>();
-        alpha.addFirst("a");
-        alpha.addFirst("b");
-        alpha.addFirst("a");
-        alpha.addFirst("b");
-        alpha.addFirst("a");
-        alpha.addFirst("b");
-        alpha.addFirst("a");
-        alpha.addLast("c");
-        alpha.addLast("d");
-        alpha.addLast("c");
-        alpha.addLast("d");
-        alpha.addLast("c");
-        alpha.addLast("d");
-        alpha.addFirst("a");
-        alpha.addFirst("b");
-        alpha.addFirst("a");
-        alpha.addFirst("b");
-        alpha.addFirst("a");
-        alpha.addFirst("b");
-        alpha.addFirst("a");
-        alpha.addLast("c");
-        alpha.addLast("d");
-        alpha.addLast("c");
-        alpha.addLast("d");
-        alpha.addLast("c");
-        alpha.addLast("d");
-        alpha.addLast("d");
-        alpha.addLast("c");
-        alpha.addLast("d");
-        alpha.addLast("c");
-        alpha.addLast("d");
-
-        alpha.removeFirst();
-        alpha.removeLast();
-        alpha.removeFirst();
-        alpha.removeLast();
-        alpha.removeFirst();
-        alpha.removeLast();
-        alpha.removeFirst();
-        alpha.removeLast();
-        alpha.removeFirst();
-        alpha.removeLast();
-        alpha.removeFirst();
-        alpha.removeLast();
-        alpha.removeFirst();
-        alpha.removeLast();
-        alpha.removeFirst();
-        alpha.removeLast();
-        alpha.removeFirst();
-        alpha.removeLast();
-        alpha.removeFirst();
-        alpha.removeLast();
-        alpha.removeFirst();
     }
 
 }
