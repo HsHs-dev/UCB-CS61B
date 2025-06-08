@@ -1,5 +1,7 @@
 package deque;
 
+import com.sun.nio.sctp.SendFailedNotification;
+
 public class LinkedListDeque<T> {
 
     private class Node {
@@ -155,8 +157,26 @@ public class LinkedListDeque<T> {
      * @param index index of the target item
      * @return the item at the index place
      */
-//    public T getRecursive(int index) {
-//        // TODO
-//    }
+    public T getRecursive(int index) {
+        if (index < 0 || index >= size) {
+            return null;
+        }
+        return getRecursive(sentinel.next, index);
+    }
+    private T getRecursive(Node node, int index) {
+        if (index == 0) {
+            return node.item;
+        }
+        return getRecursive(node.next, index - 1);
+    }
+
+    public static void main(String[] args) {
+        LinkedListDeque<Integer> list = new LinkedListDeque<>();
+        list.addFirst(5);
+        list.addFirst(6);
+        list.addFirst(7);
+        list.addFirst(8);
+        System.out.println(list.getRecursive(-1));
+    }
 
 }
