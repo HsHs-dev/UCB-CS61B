@@ -2,10 +2,10 @@ package deque;
 
 public class ArrayDeque<T> {
 
-    T[] list;
-    int firstIndex;
-    int lastIndex;
-    int size;
+    private T[] list;
+    private int firstIndex;
+    private int lastIndex;
+    private int size;
 
 
     public ArrayDeque() {
@@ -109,7 +109,7 @@ public class ArrayDeque<T> {
      * @return item at the index index
      */
     public T get(int index) {
-        return list[index];
+        return list[index + firstIndex];
     }
 
     /**
