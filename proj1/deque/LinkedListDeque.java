@@ -1,8 +1,6 @@
 package deque;
 
-import com.sun.nio.sctp.SendFailedNotification;
-
-public class LinkedListDeque<T> {
+public class LinkedListDeque<T> implements Deque<T> {
 
     private class Node {
         Node prev;
@@ -31,6 +29,7 @@ public class LinkedListDeque<T> {
      * Adds an item to the front of the deque
      * @param item item to be added
      */
+    @Override
     public void addFirst(T item) {
         Node first = new Node(null, item, null);
         if (size == 0) {
@@ -54,6 +53,7 @@ public class LinkedListDeque<T> {
      * Adds item to the back of the deque
      * @param item item to be added
      */
+    @Override
     public void addLast(T item) {
         Node last = new Node(null, item, null);
         last.next = sentinel;
@@ -64,15 +64,9 @@ public class LinkedListDeque<T> {
     }
 
     /**
-     * @return true if deque is empty
-     */
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    /**
      * @return size of the deque
      */
+    @Override
     public int size() {
         return size;
     }
@@ -81,6 +75,7 @@ public class LinkedListDeque<T> {
      * prints the item of the deque from first to last, seperated by a space.
      * prints a newline at the end
      */
+    @Override
     public void printDeque() {
         Node node = sentinel.next;
         while (node != sentinel) {
@@ -94,6 +89,7 @@ public class LinkedListDeque<T> {
      * removes the first item from the deque
      * @return first item from the deque
      */
+    @Override
     public T removeFirst() {
         if (size == 0) return null;
         T item = sentinel.next.item;
@@ -109,6 +105,7 @@ public class LinkedListDeque<T> {
      * removes the last item from the deque
      * @return last item from the deque
      */
+    @Override
     public T removeLast() {
         if (size == 0) {
             return null;
@@ -126,6 +123,7 @@ public class LinkedListDeque<T> {
      * @param index index of the target item
      * @return the item at the index place
      */
+    @Override
     public T get(int index) {
         if (isEmpty() || index < 0 || index >= size) {
             return null;

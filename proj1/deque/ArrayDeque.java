@@ -1,6 +1,8 @@
 package deque;
 
-public class ArrayDeque<T> {
+import org.junit.Test;
+
+public class ArrayDeque<T> implements Deque<T> {
 
     private T[] list;
     private int firstIndex;
@@ -20,6 +22,7 @@ public class ArrayDeque<T> {
      * Adds an item to the front of the deque
      * @param item to be added to the deque
      */
+    @Override
     public void addFirst(T item) {
         if (firstIndex == 0) {
             resize(list.length * 2);
@@ -35,6 +38,7 @@ public class ArrayDeque<T> {
      * Adds an item to the end of the deque
      * @param item to be added to the deque
      */
+    @Override
     public void addLast(T item) {
         if (lastIndex == list.length - 1) {
             resize(list.length * 2);
@@ -47,15 +51,9 @@ public class ArrayDeque<T> {
     }
 
     /**
-     * @return true if the deque is empty
-     */
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    /**
      * @return the number of items in the deque
      */
+    @Override
     public int size() {
         return size;
     }
@@ -64,6 +62,7 @@ public class ArrayDeque<T> {
      * Prints the items in the deque from first to last, separated by a space.
      * Print a new line after all items are printed
      */
+    @Override
     public void printDeque() {
         for (int i = 0; i < size; i++) {
             System.out.print(list[i] + " ");
@@ -75,6 +74,7 @@ public class ArrayDeque<T> {
      * Removes the first item from the deque
      * @return the first item from the deque
      */
+    @Override
     public T removeFirst() {
         if (isEmpty()) {
             return null;
@@ -92,6 +92,7 @@ public class ArrayDeque<T> {
      * Removes the last item from the deque
      * @return the last item from the deque
      */
+    @Override
     public T removeLast() {
         if (isEmpty()) {
             return null;
@@ -108,6 +109,7 @@ public class ArrayDeque<T> {
      * @param index of the item to be returned
      * @return item at the index index
      */
+    @Override
     public T get(int index) {
         return list[index + firstIndex];
     }
