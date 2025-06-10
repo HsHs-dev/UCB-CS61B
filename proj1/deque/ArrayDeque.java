@@ -169,9 +169,11 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
      * @return the index of the first element
      */
     private int getFirstIndex() {
-        int first = 0;
-        while (first < size && list[first] == null) {
-            first++;
+        int first;
+        for (first = 0; first < list.length; first++) {
+            if (list[first] != null) {
+                return first;
+            }
         }
         return first;
     }
