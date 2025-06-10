@@ -72,7 +72,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     @Override
     public void printDeque() {
         for (int i = 0; i < size; i++) {
-            System.out.print(list[i] + " ");
+            System.out.print(get(i) + " ");
         }
         System.out.println();
     }
@@ -122,6 +122,9 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
      */
     @Override
     public T get(int index) {
+        if (index < 0 || index >= size) {
+            return null;
+        }
         return list[index + firstIndex];
     }
 
@@ -146,7 +149,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
 
         @Override
         public T next() {
-            T item = list[position];
+            T item = list[position + firstIndex];
             position++;
             return item;
         }
@@ -158,37 +161,11 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
      */
     private void resize(int factor) {
         T[] a = (T[]) new Object[factor];
-        System.arraycopy(list, firstIndex, a, a.length / 4, size);
+        int newStart = factor / 4;
+        System.arraycopy(list, firstIndex, a, newStart, size);
         list = a;
-        firstIndex = getFirstIndex();
-        lastIndex = getLastIndex();
-    }
-
-    /**
-     * @return the index of the first element
-     */
-    private int getFirstIndex() {
-        int first;
-        for (first = 0; first < list.length; first++) {
-            if (list[first] != null) {
-                return first;
-            }
-        }
-        return first;
-    }
-
-    /**
-     * @return the index of the last element
-     */
-    private int getLastIndex() {
-        int last;
-        for (last = list.length - 1; last >= 0; last--) {
-            if (list[last] != null) {
-                return last;
-            }
-        }
-
-        return last;
+        firstIndex = newStart;
+        lastIndex = firstIndex + size - 1;
     }
 
     /**
@@ -196,7 +173,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
      * @return true if the deque size is less than 25% of the array size
      */
     private boolean checkUsage() {
-        return size < (list.length / 4) && (size > 8);
+        return list.length > 8 && size < (list.length / 4);
     }
 
     /**
@@ -206,8 +183,8 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         T[] a = (T[]) new Object[list.length / 4];
         System.arraycopy(list, firstIndex, a, 0, size);
         list = a;
-        firstIndex = getFirstIndex();
-        lastIndex = getLastIndex();
+        firstIndex = 0;
+        lastIndex = size - 1;
     }
 
 
