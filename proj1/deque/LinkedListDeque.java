@@ -3,7 +3,7 @@ package deque;
 import java.util.Iterator;
 import java.util.Objects;
 
-public class LinkedListDeque<T> implements Deque<T> {
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
     private class Node {
         Node prev;
@@ -94,7 +94,9 @@ public class LinkedListDeque<T> implements Deque<T> {
      */
     @Override
     public T removeFirst() {
-        if (size == 0) return null;
+        if (size == 0) {
+            return null;
+        }
         T item = sentinel.next.item;
         Node first = sentinel.next;
         sentinel.next.next.prev = sentinel;
@@ -180,7 +182,7 @@ public class LinkedListDeque<T> implements Deque<T> {
     private class LinkedListDequeIterator implements Iterator<T> {
 
         int position;
-        public LinkedListDequeIterator() {
+        LinkedListDequeIterator() {
             position = 0;
         }
 

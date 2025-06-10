@@ -10,9 +10,9 @@ public class MaxArrayDeque<T> extends ArrayDeque<T> {
         comparator = c;
     }
 
-    public MaxArrayDeque() {
-        super();
-    }
+//    public MaxArrayDeque() {
+//        super();
+//    }
 
     public T max() {
         return max(comparator);

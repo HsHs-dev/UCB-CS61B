@@ -3,7 +3,7 @@ package deque;
 import java.util.Iterator;
 import java.util.Objects;
 
-public class ArrayDeque<T> implements Deque<T> {
+public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
 
     private T[] list;
     private int firstIndex;
@@ -18,12 +18,12 @@ public class ArrayDeque<T> implements Deque<T> {
         size = 0;
     }
 
-    public ArrayDeque(int capacity) {
-        list = (T[]) new Object[capacity];
-        firstIndex = (list.length / 2);
-        lastIndex = (list.length / 2) - 1;
-        size = 0;
-    }
+//    public ArrayDeque(int capacity) {
+//        list = (T[]) new Object[capacity];
+//        firstIndex = (list.length / 2);
+//        lastIndex = (list.length / 2) - 1;
+//        size = 0;
+//    }
 
 
     /**
@@ -87,7 +87,9 @@ public class ArrayDeque<T> implements Deque<T> {
         if (isEmpty()) {
             return null;
         }
-        if (checkUsage()) shrink();
+        if (checkUsage()) {
+            shrink();
+        }
         T first = list[firstIndex];
         list[firstIndex] = null;
         firstIndex++;
@@ -105,7 +107,9 @@ public class ArrayDeque<T> implements Deque<T> {
         if (isEmpty()) {
             return null;
         }
-        if (checkUsage()) shrink();
+        if (checkUsage()) {
+            shrink();
+        }
         T last = list[lastIndex];
         list[lastIndex] = null;
         lastIndex--;
@@ -132,7 +136,7 @@ public class ArrayDeque<T> implements Deque<T> {
     private class ArrayDequeIterator implements Iterator<T> {
 
         int position;
-        public ArrayDequeIterator() {
+        ArrayDequeIterator() {
             position = 0;
         }
 
@@ -166,7 +170,7 @@ public class ArrayDeque<T> implements Deque<T> {
      */
     private int getFirstIndex() {
         int first = 0;
-        while (list[first] == null) {
+        while (first < size && list[first] == null) {
             first++;
         }
         return first;
@@ -202,36 +206,36 @@ public class ArrayDeque<T> implements Deque<T> {
         lastIndex = getLastIndex();
     }
 
-
-    /**
-     * @param o object to be compared to
-     * @return true if parameter o is equal to the Deque
-     */
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (!(o instanceof ArrayDeque)) {
-            return false;
-        }
-
-        ArrayDeque<?> other = (ArrayDeque<?>) o;
-
-        if (other.size() != this.size()) {
-            return false;
-        }
-
-        Iterator<T> thisIter = this.iterator();
-        Iterator<?> otherIter = other.iterator();
-
-        while (thisIter.hasNext() && otherIter.hasNext()) {
-            if (!Objects.equals(thisIter.next(), otherIter.next())) {
-                return false;
-            }
-        }
-
-        return true;
-    }
+//
+//    /**
+//     * @param o object to be compared to
+//     * @return true if parameter o is equal to the Deque
+//     */
+//    private boolean equals(Object o) {
+//        if (this == o) {
+//            return true;
+//        }
+//
+//        if (!(o instanceof ArrayDeque)) {
+//            return false;
+//        }
+//
+//        ArrayDeque<?> other = (ArrayDeque<?>) o;
+//
+//        if (other.size() != this.size()) {
+//            return false;
+//        }
+//
+//        Iterator<T> thisIter = this.iterator();
+//        Iterator<?> otherIter = other.iterator();
+//
+//        while (thisIter.hasNext() && otherIter.hasNext()) {
+//            if (!Objects.equals(thisIter.next(), otherIter.next())) {
+//                return false;
+//            }
+//        }
+//
+//        return true;
+//    }
 
 }
