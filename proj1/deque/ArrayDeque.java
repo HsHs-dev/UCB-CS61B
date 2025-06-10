@@ -1,7 +1,5 @@
 package deque;
 
-import org.junit.Test;
-
 public class ArrayDeque<T> implements Deque<T> {
 
     private T[] list;
