@@ -1,6 +1,7 @@
 package deque;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 public class ArrayDeque<T> implements Deque<T> {
 
@@ -199,6 +200,38 @@ public class ArrayDeque<T> implements Deque<T> {
         list = a;
         firstIndex = getFirstIndex();
         lastIndex = getLastIndex();
+    }
+
+
+    /**
+     * @param o object to be compared to
+     * @return true if parameter o is equal to the Deque
+     */
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof ArrayDeque)) {
+            return false;
+        }
+
+        ArrayDeque<?> other = (ArrayDeque<?>) o;
+
+        if (other.size() != this.size()) {
+            return false;
+        }
+
+        Iterator<T> thisIter = this.iterator();
+        Iterator<?> otherIter = other.iterator();
+
+        while (thisIter.hasNext() && otherIter.hasNext()) {
+            if (!Objects.equals(thisIter.next(), otherIter.next())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }
