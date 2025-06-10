@@ -1,5 +1,7 @@
 package deque;
 
+import java.util.Iterator;
+
 public class LinkedListDeque<T> implements Deque<T> {
 
     private class Node {
@@ -165,6 +167,33 @@ public class LinkedListDeque<T> implements Deque<T> {
             return node.item;
         }
         return getRecursive(node.next, index - 1);
+    }
+
+    /**
+     * @return an iterator object of this deque
+     */
+    public Iterator<T> iterator() {
+        return new LinkedListDequeIterator();
+    }
+
+    private class LinkedListDequeIterator implements Iterator<T> {
+
+        int position;
+        public LinkedListDequeIterator() {
+            position = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return position < size;
+        }
+
+        @Override
+        public T next() {
+            T item = get(position);
+            position++;
+            return item;
+        }
     }
 
 }
