@@ -1,5 +1,6 @@
 package deque;
 
+import java.util.ArrayDeque;
 import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
@@ -198,13 +199,38 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         }
     }
 
+
     /**
      * @param o object to be compared to
      * @return true if parameter o is equal to the Deque
      */
     public boolean equals(Object o) {
-        return o instanceof Deque;
+
+        if (this == o) {
+            return true;
+        }
+
+        if (this.size() != o.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < size; i++) {
+            if (!java.util.Objects.equals(get(i), ((Deque<?>) o).get(i))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
+    public static void main(String[] args) {
+        ArrayDeque<Integer> numbers1 = new ArrayDeque<>();
+        LinkedListDeque<Integer> numbers2 = new LinkedListDeque<>();
+        numbers1.addLast(1);
+        numbers1.addLast(2);
+        numbers2.addLast(1);
+        numbers2.addLast(2);
+        System.out.println(numbers2.equals(numbers1));
+    }
 
 }
