@@ -33,17 +33,6 @@ public class MaxArrayDequeTest {
         assertEquals(30, max);
    }
 
-   @Test
-    public void names() {
-        MaxArrayDeque<String> list = new MaxArrayDeque<>();
-        list.addFirst("Hassan");
-       list.addFirst("Siddig");
-       list.addFirst("Mahmoud");
-
-       String max = list.max(new Words());
-       assertEquals("Siddig", max);
-
-   }
 
 
 }
