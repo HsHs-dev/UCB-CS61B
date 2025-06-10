@@ -1,7 +1,6 @@
 package deque;
 
 import java.util.Iterator;
-import java.util.Objects;
 
 public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
@@ -222,7 +221,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         Iterator<?> otherIter = other.iterator();
 
         while (thisIter.hasNext() && otherIter.hasNext()) {
-            if (!Objects.equals(thisIter.next(), otherIter.next())) {
+            if (!java.util.Objects.equals(thisIter.next(), otherIter.next())) {
                 return false;
             }
         }

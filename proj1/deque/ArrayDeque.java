@@ -1,7 +1,6 @@
 package deque;
 
 import java.util.Iterator;
-import java.util.Objects;
 
 public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
 
@@ -182,10 +181,13 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
      * @return the index of the last element
      */
     private int getLastIndex() {
-        int last = list.length - 1;
-        while (list[last] == null) {
-            last--;
+        int last;
+        for (last = list.length - 1; last >= 0; last--) {
+            if (list[last] != null) {
+                return last;
+            }
         }
+
         return last;
     }
 
@@ -208,36 +210,36 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         lastIndex = getLastIndex();
     }
 
-//
-//    /**
-//     * @param o object to be compared to
-//     * @return true if parameter o is equal to the Deque
-//     */
-//    private boolean equals(Object o) {
-//        if (this == o) {
-//            return true;
-//        }
-//
-//        if (!(o instanceof ArrayDeque)) {
-//            return false;
-//        }
-//
-//        ArrayDeque<?> other = (ArrayDeque<?>) o;
-//
-//        if (other.size() != this.size()) {
-//            return false;
-//        }
-//
-//        Iterator<T> thisIter = this.iterator();
-//        Iterator<?> otherIter = other.iterator();
-//
-//        while (thisIter.hasNext() && otherIter.hasNext()) {
-//            if (!Objects.equals(thisIter.next(), otherIter.next())) {
-//                return false;
-//            }
-//        }
-//
-//        return true;
-//    }
+
+    /**
+     * @param o object to be compared to
+     * @return true if parameter o is equal to the Deque
+     */
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof ArrayDeque)) {
+            return false;
+        }
+
+        ArrayDeque<?> other = (ArrayDeque<?>) o;
+
+        if (other.size() != this.size()) {
+            return false;
+        }
+
+        Iterator<T> thisIter = this.iterator();
+        Iterator<?> otherIter = other.iterator();
+
+        while (thisIter.hasNext() && otherIter.hasNext()) {
+            if (!java.util.Objects.equals(thisIter.next(), otherIter.next())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 }

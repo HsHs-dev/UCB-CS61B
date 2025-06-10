@@ -33,8 +33,4 @@ public class MaxArrayDeque<T> extends ArrayDeque<T> {
         return maxItem;
     }
 
-    public boolean equals(Object o) {
-        return this == o;
-    }
-
 }
