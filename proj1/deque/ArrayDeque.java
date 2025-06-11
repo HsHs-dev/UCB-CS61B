@@ -187,29 +187,24 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         lastIndex = size - 1;
     }
 
-
     /**
      * @param o object to be compared to
      * @return true if parameter o is equal to the Deque
      */
     public boolean equals(Object o) {
 
-        if (!(o instanceof Deque)) {
-            return false;
-        }
-
         if (this == o) {
             return true;
         }
 
-
-
-        if (this.size() != ((Deque<?>) o).size()) {
+        if (!(o instanceof deque.Deque)) {
             return false;
         }
 
+        Deque<?> other = (Deque<?>) o;
+
         for (int i = 0; i < size; i++) {
-            if (!java.util.Objects.equals(get(i), ((Deque<?>) o).get(i))) {
+            if (!java.util.Objects.equals(this.get(i), other.get(i))) {
                 return false;
             }
         }
