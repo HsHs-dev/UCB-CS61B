@@ -17,13 +17,19 @@ The course uses Java to teach, and is composed of:
 Data Structures and Algorithms are a vital subject to elevate your programming skills, and allow you to write more complex things.
 > The difference between a bad programmer and a good one is whether [the programmer] considers code or data structures more important. Bad programmers worry about the code. Good programmers worry about data structures and their relationships. - Linus Torvalds (Creator of Linux)
 
+## Notes
+
+I am not much of a *notes guy*, that's why I prefer *getting your hands dirty courses*. But I stumbled upon this beautiful UCB courses notes called [Ben's Notes](https://notes.bencuan.me/cs61b/), I haven't read them yet but I think they will be a great asset when I start [CS70: Discrete Math](https://notes.bencuan.me/cs70/)  
+
 ## Labs
 
 - [x] Lab 1 Setup: Setting Up Your Computer
 - [x] Lab 2: JUnit Tests and Debugging
 - [x] Lab 3: Timing Tests and Randomized Comparison Tests
+- [ ] Lab 4: Git and Debugging
 
 ## Projects
 
 - [x] Project 0: 2048 Game
-- [ ] Project 1: Data Structures
+- [x] Project 1: Data Structures
+- [ ] Project 1 Extra Credit: Autograding
