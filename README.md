@@ -26,7 +26,7 @@ I am not much of a *notes guy*, that's why I prefer *getting your hands dirty co
 - [x] Lab 1 Setup: Setting Up Your Computer
 - [x] Lab 2: JUnit Tests and Debugging
 - [x] Lab 3: Timing Tests and Randomized Comparison Tests
-- [ ] Lab 4: Git and Debugging
+- [x] Lab 4: Git and Debugging
 
 ## Projects
 
