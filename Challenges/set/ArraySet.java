@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.Iterator;
 
 public class ArraySet<T> implements Iterable<T> {
@@ -42,6 +43,9 @@ public class ArraySet<T> implements Iterable<T> {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
         if (o instanceof ArraySet oas) {
             if (this.size != oas.size) {
                 return false;
@@ -53,9 +57,36 @@ public class ArraySet<T> implements Iterable<T> {
                 }
             }
         }
-        
-        return true;
 
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        ArraySet<String> list = new ArraySet<>();
+        for (T item: this) {
+            list.add(item.toString());
+        }
+        return "{" + String.join(", ", list) + "}";
+    }
+//    @Override
+//    public String toString() {
+//        StringBuilder sb = new StringBuilder("{");
+//        for (int i = 0; i < size - 1; i++) {
+//            sb.append(set[i]);
+//            sb.append(", ");
+//        }
+//        sb.append(set[size - 1]);
+//        sb.append("}");
+//        return sb.toString();
+//    }
+
+    public static <T> ArraySet<T> of(T... elements) {
+        ArraySet<T> list = new ArraySet<>();
+        for (T element : elements) {
+            list.add(element);
+        }
+        return list;
     }
 
     public Iterator<T> iterator() {
