@@ -1,6 +1,6 @@
 import java.util.Iterator;
 
-public class ArraySet<T> {
+public class ArraySet<T> implements Iterable<T> {
     
     private T[] set;
     private int size;
@@ -40,6 +40,24 @@ public class ArraySet<T> {
         System.out.println();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ArraySet oas) {
+            if (this.size != oas.size) {
+                return false;
+            }
+
+            for (T x : this) {
+                if (!oas.contains(x)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+
+    }
+
     public Iterator<T> iterator() {
         return new ArraySetIterator();
     }
@@ -58,8 +76,9 @@ public class ArraySet<T> {
 
         @Override
         public T next() {
+            T item = set[positon];
             positon++;
-            return set[positon];
+            return item;
         }
     } 
 
