@@ -27,6 +27,9 @@ I am not much of a *notes guy*, that's why I prefer *getting your hands dirty co
 - [x] Lab 2: JUnit Tests and Debugging
 - [x] Lab 3: Timing Tests and Randomized Comparison Tests
 - [x] Lab 4: Git and Debugging
+- [ ] Lab 5: Project 1 Peer Code Review (no peers :-( )
+- [x] Lab 6: Getting Started on Project 2
+- [ ] Lab 7: BSTMap
 
 ## Projects
 
