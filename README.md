@@ -21,6 +21,10 @@ Data Structures and Algorithms are a vital subject to elevate your programming s
 
 I am not much of a *notes guy*, that's why I prefer *getting your hands dirty courses*. But I stumbled upon this beautiful UCB courses notes called [Ben's Notes](https://notes.bencuan.me/cs61b/), I haven't read them yet but I think they will be a great asset when I start [CS70: Discrete Math](https://notes.bencuan.me/cs70/)  
 
+## Data Structures Implementations
+
+Some of the taught data structures (like dijoint sets) are not implemented in lectures neither in a lab as an assignment, my implementations to them can be found [here](https://github.com/HsHs-dev/Algorithms)
+
 ## Labs
 
 - [x] Lab 1 Setup: Setting Up Your Computer
@@ -29,7 +33,8 @@ I am not much of a *notes guy*, that's why I prefer *getting your hands dirty co
 - [x] Lab 4: Git and Debugging
 - [ ] Lab 5: Project 1 Peer Code Review (no peers :-( )
 - [x] Lab 6: Getting Started on Project 2
-- [ ] Lab 7: BSTMap
+- [x] Lab 7: BSTMap
+- [ ] Lab 8: HashMap
 
 ## Projects
 
