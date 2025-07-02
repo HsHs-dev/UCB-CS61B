@@ -110,7 +110,46 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        V val = get(key);
+        if (val == null) return null;
+        root = deleteKey(root, key);
+        size--;
+        return val;
+    }
+    private Node deleteKey(Node root, K key) {
+        if (root == null) return null;
+        int comp = key.compareTo(root.key);
+
+        if (comp < 0) {
+            root.left = deleteKey(root.left, key);
+        } else if (comp > 0) {
+            root.right = deleteKey(root.right, key);
+        } else {
+            // covers if node has 0 or 1 child
+            if (root.right == null) return root.left;
+            if (root.left == null) return root.right;
+
+            // if node has 2 children
+            Node temp = root;  // preserve the current node so we can get it's left hand
+            root = min(temp.right); // make the node equals its successor
+            root.right = deleteMin(temp.right);  // delete the successor (while preserving its right hand)
+            root.left = temp.left; // wire the left hand
+        }
+
+        return root;
+
+    }
+    private Node min(Node root) {
+        if (root == null) return null;
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root;
+    }
+    private Node deleteMin(Node root) {
+        if (root.left == null) return root.right;
+        root.left = deleteMin(root.left);
+        return root;
     }
 
     @Override
