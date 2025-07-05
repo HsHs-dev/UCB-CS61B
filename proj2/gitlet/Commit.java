@@ -1,6 +1,8 @@
 package gitlet;
 
-// TODO: any imports you need here
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import java.util.Date; // TODO: You'll likely use this in this class
 
@@ -8,19 +10,31 @@ import java.util.Date; // TODO: You'll likely use this in this class
  *  TODO: It's a good idea to give a description here of what else this Class
  *  does at a high level.
  *
- *  @author TODO
+ *  @author Hassan Siddig
  */
 public class Commit {
-    /**
-     * TODO: add instance variables here.
-     *
-     * List all instance variables of the Commit class here with a useful
-     * comment above them describing what that variable represents and how that
-     * variable is used. We've provided one example for `message`.
-     */
 
     /** The message of this Commit. */
     private String message;
 
-    /* TODO: fill in the rest of this class. */
+    /** The parent commit of the current Commit */
+    private Commit parent;
+
+    /** The timestamp of this Commit */
+    private String timestamp;
+
+    public Commit(String message) {
+        this.message = message;
+        this.timestamp = getTimestamp();
+        // TODO
+        this.parent = null;
+    }
+
+    private String getTimestamp() {
+        ZonedDateTime now = ZonedDateTime.now();
+
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
+        return now.format(formatter);
+    }
 }

@@ -2,8 +2,7 @@ package gitlet;
 
 import java.io.File;
 import static gitlet.Utils.*;
-
-// TODO: any imports you need here
+import java.util.LinkedList;
 
 /** Represents a gitlet repository.
  *  TODO: It's a good idea to give a description here of what else this Class
@@ -12,20 +11,26 @@ import static gitlet.Utils.*;
  *  @author Hassan Siddig
  */
 public class Repository {
-    /**
-     * TODO: add instance variables here.
-     *
-     * List all instance variables of the Repository class here with a useful
-     * comment above them describing what that variable represents and how that
-     * variable is used. We've provided two examples for you.
-     */
 
     /** The current working directory. */
-    public static final File CWD = new File(System.getProperty("user.dir"));
+    private static final File CWD = new File(System.getProperty("user.dir"));
     /** The .gitlet directory. */
-    public static final File GITLET_DIR = join(CWD, ".gitlet");
+    private static final File GITLET_DIR = join(CWD, ".gitlet");
+
+    /** The commits list */
+    private static LinkedList<Commit> commits = new LinkedList<>();
 
     public static void init() {
+
+        // initializing the .gitlet directory
+        if (!GITLET_DIR.exists()) {
+            GITLET_DIR.mkdir();
+        }
+
+        // create the initial commit and add it to the commits list
+        Commit init = new Commit("initial commit");
+        commits.add(init);
+
     }
 
     public static void add(String arg) {
