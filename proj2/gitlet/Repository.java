@@ -23,6 +23,12 @@ public class Repository {
     /** The commits list */
     private static final LinkedList<Commit> commits = new LinkedList<>();
 
+    /** HEAD pointer that points to the current commit */
+    private static Commit HEAD;
+
+    /** Master branch pointer */
+    private static Commit master;
+
     public static void init() {
 
         // check if a gitlet repo already exists
@@ -35,7 +41,12 @@ public class Repository {
         GITLET_DIR.mkdir();
 
         // create the initial commit and add it to the commits list
+        Commit init = new Commit("initial commit");
 
+        // add the init commit to the commits list and assign HEAD and branch pointers
+        commits.add(init);
+        HEAD = commits.getLast();
+        master = commits.getLast();
 
     }
 
@@ -67,6 +78,16 @@ public class Repository {
 
         // write the file with its hash as its name
         writeContents(fileBlob, content);
+
+        // if the file exists in the current commit don't add it to the staging area
+//        String currCommitFileHash = HEAD.filesMap.get(addedFile);
+//        if (currCommitFileHash != null && currCommitFileHash.equals(shaName)) {
+//            return;
+//        }
+
+        // add the file to the staging area
+        Staging stage = Staging.load();
+        stage.addition(addedFile, shaName);
 
 
     }
@@ -105,5 +126,4 @@ public class Repository {
     public static void merge(String arg) {
     }
 
-    /* TODO: fill in the rest of this class. */
 }
