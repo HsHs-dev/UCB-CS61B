@@ -24,10 +24,16 @@ public class Commit {
     private String timestamp;
 
     public Commit(String message) {
+        if (message.equals("initial commit")) {
+            this.timestamp = "Thu Jan 1 00:00:00 1970 +0000";
+            this.message = message;
+            this.parent = null;
+            return;
+        }
         this.message = message;
         this.timestamp = getTimestamp();
         // TODO
-        this.parent = null;
+        // this.parent = ??
     }
 
     private String getTimestamp() {

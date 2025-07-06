@@ -17,26 +17,62 @@ public class Repository {
     /** The .gitlet directory. */
     private static final File GITLET_DIR = join(CWD, ".gitlet");
 
+    /** The blob directory, which contains blobs of the current files */
+    private static final File BLOB_DIR = join(".gitlet", "blobs");
+
     /** The commits list */
-    private static LinkedList<Commit> commits = new LinkedList<>();
+    private static final LinkedList<Commit> commits = new LinkedList<>();
 
     public static void init() {
 
-        // initializing the .gitlet directory
-        if (!GITLET_DIR.exists()) {
-            GITLET_DIR.mkdir();
+        // check if a gitlet repo already exists
+        if (GITLET_DIR.exists()) {
+            System.out.println("A Gitlet version-control system already exists in the current directory.");
+            System.exit(0);
         }
 
+        // initialize the gitlet repo
+        GITLET_DIR.mkdir();
+
         // create the initial commit and add it to the commits list
-        Commit init = new Commit("initial commit");
-        commits.add(init);
+
 
     }
 
-    public static void add(String arg) {
+    public static void add(String addedFile) {
+
+        File file = new File(CWD, addedFile);
+
+        // check if the file exist
+        if (!file.exists()) {
+            System.out.println("File does not exist.");
+            System.exit(0);
+        }
+
+        // create the blobs directory if not created
+        if (!BLOB_DIR.exists()) {
+            BLOB_DIR.mkdir();
+        }
+
+        // compute the SHA-1 hash of the file
+        byte[] content = readContents(file);
+        String shaName = sha1(content);
+
+        File fileBlob = join(BLOB_DIR, shaName);
+
+        // skip writing if the file already exists
+        if (fileBlob.exists()) {
+            return;
+        }
+
+        // write the file with its hash as its name
+        writeContents(fileBlob, content);
+
+
     }
 
     public static void commit(String arg) {
+
     }
 
     public static void remove(String arg) {
