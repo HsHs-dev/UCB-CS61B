@@ -27,7 +27,7 @@ public class Repository {
     private static Commit HEAD;
 
     /** Master branch pointer */
-    private static Commit master;
+    private static Commit master = HEAD;
 
     public static void init() {
 
@@ -41,13 +41,13 @@ public class Repository {
         GITLET_DIR.mkdir();
 
         // create the initial commit and add it to the commits list
-        Commit init = new Commit("initial commit");
+        Commit init = new Commit("initial commit", null);
 
-        // add the init commit to the commits list and assign HEAD and branch pointers
+        // add the init commit to the commits list
         commits.add(init);
-        HEAD = commits.getLast();
-        master = commits.getLast();
 
+        // assign HEAD pointer
+        HEAD = commits.getLast();
     }
 
     public static void add(String addedFile) {
@@ -80,19 +80,52 @@ public class Repository {
         writeContents(fileBlob, content);
 
         // if the file exists in the current commit don't add it to the staging area
-//        String currCommitFileHash = HEAD.filesMap.get(addedFile);
-//        if (currCommitFileHash != null && currCommitFileHash.equals(shaName)) {
-//            return;
-//        }
+        String currCommitFileHash = HEAD.getFile(addedFile);
+        if (currCommitFileHash != null && currCommitFileHash.equals(shaName)) {
+            return;
+        }
 
         // add the file to the staging area
         Staging stage = Staging.load();
         stage.addition(addedFile, shaName);
 
-
     }
 
-    public static void commit(String arg) {
+    public static void commit(String message) {
+
+        // check if the commit message is blank
+        // a blank commit message is either empty or only contains whitespaces
+        if (message.isBlank()) {
+            System.out.println("Please enter a commit message.");
+            System.exit(0);
+        }
+
+        // create a new commit with the provided commit message
+        Commit newCommit = new Commit(message, HEAD);
+
+        // copy the tracked files by the parent to the current commit
+        newCommit.copyParentFiles();
+
+        // add the files from the staged for addition area
+        Staging stageArea = Staging.load();
+        if (stageArea.currAdd().isEmpty()) {
+            System.out.println("No changes added to the commit.");
+            System.exit(0);
+        }
+        newCommit.addFiles(stageArea.currAdd());
+
+        // remove the files from the staged for removal area
+        newCommit.removeFiles(stageArea.currRemove());
+
+        // clear the staging area
+        stageArea.clear();
+
+        // add the commit to the commits' tree
+        commits.add(newCommit);
+
+        // advance the head pointer
+        HEAD = commits.getLast();
+
 
     }
 
