@@ -20,14 +20,8 @@ public class Repository {
     /** The blob directory, which contains blobs of the current files */
     private static final File BLOB_DIR = join(".gitlet", "blobs");
 
-    /** The commits list */
-    private static final LinkedList<Commit> commits = new LinkedList<>();
-
-    /** HEAD pointer that points to the current commit */
-    private static Commit HEAD;
-
-    /** Master branch pointer */
-    private static Commit master = HEAD;
+    /** Commits folder */
+    private static final File COMMITS_DIR = join(GITLET_DIR, "commits");
 
     public static void init() {
 
@@ -41,13 +35,7 @@ public class Repository {
         GITLET_DIR.mkdir();
 
         // create the initial commit and add it to the commits list
-        Commit init = new Commit("initial commit", null);
-
-        // add the init commit to the commits list
-        commits.add(init);
-
-        // assign HEAD pointer
-        HEAD = commits.getLast();
+        Commit init = new Commit("initial commit");
     }
 
     public static void add(String addedFile) {
@@ -80,7 +68,7 @@ public class Repository {
         writeContents(fileBlob, content);
 
         // if the file exists in the current commit don't add it to the staging area
-        String currCommitFileHash = HEAD.getFile(addedFile);
+        String currCommitFileHash = Commit.getFile(addedFile);
         if (currCommitFileHash != null && currCommitFileHash.equals(shaName)) {
             return;
         }
@@ -101,7 +89,7 @@ public class Repository {
         }
 
         // create a new commit with the provided commit message
-        Commit newCommit = new Commit(message, HEAD);
+        Commit newCommit = new Commit(message);
 
         // copy the tracked files by the parent to the current commit
         newCommit.copyParentFiles();
@@ -120,13 +108,11 @@ public class Repository {
         // clear the staging area
         stageArea.clear();
 
-        // add the commit to the commits' tree
-        commits.add(newCommit);
+        // write the commit
+        newCommit.writeCommit();
 
-        // advance the head pointer
-        HEAD = commits.getLast();
-
-
+        // add the commit to the commits' tree and advance the head pointer
+        Commit.addCommit(newCommit);
     }
 
     public static void remove(String arg) {
