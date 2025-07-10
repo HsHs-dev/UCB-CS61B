@@ -26,7 +26,7 @@ public class Commit implements Serializable {
     private static final File COMMITS_DIR = join(GITLET_DIR, "commits");
 
     /** HEAD file */
-    private static final File HEAD_FILE = join(COMMITS_DIR, "HEAD");
+    private static final File HEAD_FILE = join(GITLET_DIR, "HEAD");
 
     /** The message of this Commit. */
     private String message;
@@ -54,7 +54,7 @@ public class Commit implements Serializable {
             return;
         }
         this.message = message;
-        this.timestamp = getTimestamp();
+        this.timestamp = writeTimestamp();
         this.parent = Arrays.toString(readContents(HEAD_FILE));
     }
 
@@ -74,7 +74,7 @@ public class Commit implements Serializable {
         writeContents(HEAD_FILE, this.hash);
     }
 
-    private String getTimestamp() {
+    private String writeTimestamp() {
         ZonedDateTime now = ZonedDateTime.now();
 
         DateTimeFormatter formatter =
@@ -97,10 +97,17 @@ public class Commit implements Serializable {
         this.filesMap = new TreeMap<>(parentCommit.filesMap);
     }
 
-    private static Commit load() {
+    /**
+     * @return the current commit (HEAD commit)
+     */
+    public static Commit load() {
         String head = readContentsAsString(HEAD_FILE);
         File currentCommitFile = join(COMMITS_DIR, head);
         return readObject(currentCommitFile, Commit.class);
+    }
+
+    public boolean exists(String fileName) {
+        return filesMap.containsKey(fileName);
     }
 
     /**
@@ -154,4 +161,27 @@ public class Commit implements Serializable {
         File commitFile = join(COMMITS_DIR, hash);
         writeObject(commitFile, this);
     }
+
+    /**
+     * @return the commit's ID
+     */
+    public String getHash() {
+        return this.hash;
+    }
+
+    /**
+     * @return the commit's timestamp
+     */
+    public String getTimestamp() {
+        return this.timestamp;
+    }
+
+    /**
+     * @return the commit's message
+     */
+    public String getMessage() {
+        return this.message;
+    }
+
+
 }

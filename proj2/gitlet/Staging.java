@@ -32,12 +32,28 @@ public class Staging implements Serializable {
         saveStaging();
     }
 
+    /** Remove a file from the staging area */
+    public String removeStaged(String fileName) {
+        String staged = addStaged.remove(fileName);
+        saveStaging();
+        return staged;
+    }
+
+    /** Adds a file to the staging for removal area */
+    public void addRemoval(String fileName) {
+        removeStaged.add(fileName);
+        saveStaging();
+    }
+
     /** write the current object to .gitlet/staged file */
     private void saveStaging() {
         File staged = join(GITLET_DIR, "staged");
         writeObject(staged, this);
     }
 
+    /**
+     * @return the staging object
+     */
     public static Staging load() {
         if (!STAGED.exists()) {
             return new Staging();

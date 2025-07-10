@@ -76,7 +76,6 @@ public class Repository {
         // add the file to the staging area
         Staging stage = Staging.load();
         stage.addition(addedFile, shaName);
-
     }
 
     public static void commit(String message) {
@@ -96,7 +95,7 @@ public class Repository {
 
         // add the files from the staged for addition area
         Staging stageArea = Staging.load();
-        if (stageArea.currAdd().isEmpty()) {
+        if (stageArea.currAdd().isEmpty() && stageArea.currRemove().isEmpty()) {
             System.out.println("No changes added to the commit.");
             System.exit(0);
         }
@@ -115,10 +114,36 @@ public class Repository {
         Commit.addCommit(newCommit);
     }
 
-    public static void remove(String arg) {
+    public static void remove(String fileName) {
+
+        // remove the file from the staging area if it's staged for addition
+        Staging stageArea = Staging.load();
+        String wasStaged = stageArea.removeStaged(fileName);
+
+        // stage the file for removal if it's tracked in the current commit
+        Commit currentCommit = Commit.load();
+        boolean tracked = currentCommit.exists(fileName);
+        if (tracked) {
+            stageArea.addRemoval(fileName);
+
+            // remove the file from the working directory if the user has not already done so
+            restrictedDelete(fileName);
+        }
+
+        // the file is neither staged nor tracked by the head commit
+        if (wasStaged == null && !tracked) {
+            System.out.println("No reason to remove the file.");
+            System.exit(0);
+        }
     }
 
     public static void log() {
+
+        // load the current commit
+        Commit currentCommit = Commit.load();
+
+
+
     }
 
     public static void globalLog() {
