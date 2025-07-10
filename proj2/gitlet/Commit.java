@@ -41,7 +41,7 @@ public class Commit implements Serializable {
     private Map<String, String> filesMap = new TreeMap<>();
 
     /** Commits list */
-    private static final LinkedList<String> commits = new LinkedList<>();
+    public LinkedList<String> commits = new LinkedList<>();
 
     /** Master branch */ // TODO
 
@@ -65,6 +65,9 @@ public class Commit implements Serializable {
         this.parent = null;
         this.message = message;
         this.hash = commitHash();
+
+        // add the commit to the commits' tree
+        commits.add(this.hash);
 
         // write the object to the commits folder
         File initObj = join(COMMITS_DIR, this.hash);
@@ -95,6 +98,7 @@ public class Commit implements Serializable {
     public void copyParentFiles() {
         Commit parentCommit = load();
         this.filesMap = new TreeMap<>(parentCommit.filesMap);
+        this.commits = new LinkedList<>(parentCommit.commits);
     }
 
     /**
@@ -144,12 +148,10 @@ public class Commit implements Serializable {
         return sha1(filesMapHash.toString(), parent, message, timestamp);
     }
 
-    /**
-     * Adds a new commit to the commit tree
-     * @param commit the commit to be added
-     */
-    public static void addCommit(Commit commit) {
-        commits.add(commit.hash);
+    /** Adds a new commit to the commit tree */
+    public void addCommit() {
+        this.hash = commitHash();
+        commits.add(this.hash);
         writeContents(HEAD_FILE, commits.getLast());
     }
 
@@ -157,7 +159,6 @@ public class Commit implements Serializable {
      * write the commit to a file in commits' dir
      */
     public void writeCommit() {
-        this.hash = commitHash();
         File commitFile = join(COMMITS_DIR, hash);
         writeObject(commitFile, this);
     }

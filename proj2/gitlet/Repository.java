@@ -2,7 +2,10 @@ package gitlet;
 
 import java.io.File;
 import static gitlet.Utils.*;
+
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 /** Represents a gitlet repository.
  *  TODO: It's a good idea to give a description here of what else this Class
@@ -107,11 +110,11 @@ public class Repository {
         // clear the staging area
         stageArea.clear();
 
+        // add the commit to the commits' tree and advance the head pointer
+        newCommit.addCommit();
+
         // write the commit
         newCommit.writeCommit();
-
-        // add the commit to the commits' tree and advance the head pointer
-        Commit.addCommit(newCommit);
     }
 
     public static void remove(String fileName) {
@@ -142,7 +145,18 @@ public class Repository {
         // load the current commit
         Commit currentCommit = Commit.load();
 
-
+        LinkedList<String> list = currentCommit.commits;
+        Iterator<String> iter = list.descendingIterator();
+        while (iter.hasNext()) {
+            String commit = iter.next();
+            File currentCommitFile = join(COMMITS_DIR, commit);
+            Commit loadedCommit = readObject(currentCommitFile, Commit.class);
+            System.out.println("===");
+            System.out.println("commit " + loadedCommit.getHash());
+            System.out.println("Date: " + loadedCommit.getTimestamp());
+            System.out.println(loadedCommit.getMessage());
+            System.out.println();
+        }
 
     }
 
