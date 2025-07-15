@@ -15,8 +15,7 @@ The course uses Java to teach, and is composed of:
 ## Why taking CS61B
 
 Data Structures and Algorithms are a vital subject to elevate your programming skills, and allow you to write more complex things.
-> The difference between a bad programmer and a good one is whether [the programmer] considers code or data structures more important. Bad programmers worry about the code. Good programmers worry about data structures and their relationships. 
-- Linus Torvalds (Creator of Linux)
+> The difference between a bad programmer and a good one is whether [the programmer] considers code or data structures more important. Bad programmers worry about the code. Good programmers worry about data structures and their relationships. - Linus Torvalds (Creator of Linux)
 
 ## Notes
 
