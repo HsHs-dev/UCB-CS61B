@@ -2,7 +2,7 @@
 
 This repo contains my self-study attempt to *UC Berkeley CS61B*, whcih is the second course in CS61 series, that teaches **Data Structures and Algorithms**.
 
-I am taking the 2021 version of the course, because they made the [autograder](https://www.gradescope.com/) open sourced, just sign up with your name, UC Berkeley university, and the code **P5WVGW**.
+I am taking the [2021 version](https://sp21.datastructur.es/) of the course, because they made the [autograder](https://www.gradescope.com/) open sourced, just sign up with your name, UC Berkeley university, and the code **P5WVGW**.
 
 The course uses Java to teach, and is composed of:
 
