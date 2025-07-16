@@ -31,10 +31,10 @@ Some of the taught data structures (like dijoint sets) are not implemented in le
 - [x] Lab 2: JUnit Tests and Debugging
 - [x] Lab 3: Timing Tests and Randomized Comparison Tests
 - [x] Lab 4: Git and Debugging
-- [ ] Lab 5: Project 1 Peer Code Review (no peers :-( )
+- [ ] Lab 5: Project 1 Peer Code Review (no peers)
 - [x] Lab 6: Getting Started on Project 2
 - [x] Lab 7: BSTMap
-- [ ] Lab 8: HashMap
+- [x] Lab 8: HashMap
 
 ## Projects
 
