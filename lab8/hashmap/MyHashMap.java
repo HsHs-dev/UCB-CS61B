@@ -111,19 +111,19 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     @Override
     public void clear() {
-        buckets = null;
+        buckets = createTable(DEFAULT_INITIAL_SIZE);
         size = 0;
     }
 
     @Override
     public boolean containsKey(K key) {
-        return false;
+        return get(key) != null;
     }
 
     @Override
     public V get(K key) {
 
-        int bucket = key.hashCode() % buckets.length;
+        int bucket = Math.floorMod(key.hashCode(), buckets.length);
 
         for (Node node: buckets[bucket]) {
             if (node.key.equals(key)) {
@@ -149,7 +149,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         }
 
         // compute the suitable bucket
-        int bucket = key.hashCode() % buckets.length;
+        int bucket = Math.floorMod(key.hashCode(), buckets.length);
 
         // check if the key already exists
         for (Node node: buckets[bucket]) {
@@ -165,7 +165,14 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         size++;
     }
     private void resize() {
-
+        Collection<Node>[] newTable = createTable(buckets.length * 2);
+        for (Collection<Node> bucket: buckets) {
+            for (Node node: bucket) {
+                int place = Math.floorMod(node.key.hashCode(), newTable.length);
+                newTable[place].add(node);
+            }
+        }
+        buckets = newTable;
     }
 
     @Override
@@ -183,16 +190,61 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        int bucket = Math.floorMod(key.hashCode(), buckets.length);
+        boolean found = false;
+        int foundPos = 0;
+        Node removeNode = null;
+        for (Node node: buckets[bucket]) {
+            if (node.key.equals(key)) {
+                found = true;
+                removeNode = node;
+                break;
+            }
+            foundPos++;
+        }
+
+        V val = null;
+        if (found) {
+            val = removeNode.value;
+            buckets[bucket].remove(removeNode);
+            return val;
+        }
+
+        return null;
     }
 
     public V remove(K key, V value) {
-        throw new UnsupportedOperationException();
+        int bucket = Math.floorMod(key.hashCode(), buckets.length);
+        for (Node node: buckets[bucket]) {
+            if (node.key.equals(key)) {
+                if (node.value.equals(value)) {
+                    return remove(key);
+                }
+                break;
+            }
+        }
+        return null;
     }
 
     @Override
     public Iterator<K> iterator() {
-        return null;
+        return new MyHashMapIterator();
+    }
+
+    private class MyHashMapIterator implements Iterator<K> {
+
+        private final Set<K> keys = keySet();
+        private final Iterator<K> iter = keys.iterator();
+
+        @Override
+        public boolean hasNext() {
+            return iter.hasNext();
+        }
+
+        @Override
+        public K next() {
+            return iter.next();
+        }
     }
 
 }
