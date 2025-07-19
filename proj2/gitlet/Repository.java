@@ -5,6 +5,7 @@ import static gitlet.Utils.*;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /** Represents a gitlet repository.
@@ -161,6 +162,27 @@ public class Repository {
     }
 
     public static void globalLog() {
+
+        // store all the commits in a list
+        List<String> commits = plainFilenamesIn(COMMITS_DIR);
+
+        // loop through the commits and print them
+        if (commits == null) {
+            return;
+        }
+
+        for (String currCommit: commits) {
+
+            // load the commit
+            File commitFile = join(COMMITS_DIR, currCommit);
+            Commit commit = readObject(commitFile, Commit.class);
+
+            System.out.println("===");
+            System.out.println("commit " + commit.getHash());
+            System.out.println("Date: " + commit.getTimestamp());
+            System.out.println(commit.getMessage());
+            System.out.println();
+        }
     }
 
     public static void find(String arg) {
