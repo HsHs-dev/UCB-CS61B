@@ -3,10 +3,8 @@ package gitlet;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
+
 import static gitlet.Utils.*;
 
 /** Represent the staging and removal areas of the added files */
@@ -24,7 +22,7 @@ public class Staging implements Serializable {
     private Map<String, String> addStaged = new TreeMap<>();
 
     /** Represents the files that are staged for removal */
-    private Set<String> removeStaged = new HashSet<>();
+    private Set<String> removeStaged = new TreeSet<>();
 
     /** add a file to the staging area */
     public void addition(String fileName, String fileHash) {

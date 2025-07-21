@@ -3,10 +3,7 @@ package gitlet;
 import java.io.File;
 import static gitlet.Utils.*;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /** Represents a gitlet repository.
  *  TODO: It's a good idea to give a description here of what else this Class
@@ -63,13 +60,11 @@ public class Repository {
 
         File fileBlob = join(BLOB_DIR, shaName);
 
-        // skip writing if the file already exists
-        if (fileBlob.exists()) {
-            return;
+        // write the file already if it doesn't already exist
+        if (!fileBlob.exists()) {
+            // write the file with its hash as its name
+            writeContents(fileBlob, content);
         }
-
-        // write the file with its hash as its name
-        writeContents(fileBlob, content);
 
         // if the file exists in the current commit don't add it to the staging area
         String currCommitFileHash = Commit.getFile(addedFile);
@@ -170,7 +165,6 @@ public class Repository {
         if (commits == null) {
             return;
         }
-
         for (String currCommit: commits) {
 
             // load the commit
@@ -185,10 +179,61 @@ public class Repository {
         }
     }
 
-    public static void find(String arg) {
+    public static void find(String message) {
+
+        List<String> commits = plainFilenamesIn(COMMITS_DIR);
+
+        if (commits == null) {
+            return;
+        }
+
+        List<String> matched = new ArrayList<>();
+
+        for (String currentCommit: commits) {
+            File commitFile = join(COMMITS_DIR, currentCommit);
+            Commit commit = readObject(commitFile, Commit.class);
+
+            String commitMessage = commit.getMessage();
+            if (commitMessage.equals(message)) {
+                matched.add(commitMessage);
+            }
+        }
+
+        if (matched.isEmpty()) {
+            System.out.println("Found no commit with that message.");
+            System.exit(0);
+        }
+
+        for (String commitMessage: matched) {
+            System.out.println(commitMessage);
+        }
     }
 
     public static void status() {
+
+        // branches
+        System.out.println("=== Branches ===");
+        System.out.println("*master\n");
+
+        // staged for addition files
+        System.out.println("=== Staged Files ===");
+
+        Staging staged = Staging.load();
+        Set<String> addedFiles = staged.currAdd().keySet();
+        for (String file: addedFiles) {
+            System.out.println(file);
+        }
+        System.out.println();
+
+        // staged for removal files
+        System.out.println("=== Removed Files ===");
+
+        Set<String> removedFiles = staged.currRemove();
+        for (String file: removedFiles) {
+            System.out.println(file);
+        }
+        System.out.println();
+
     }
 
     public static void checkout(String[] args) {
