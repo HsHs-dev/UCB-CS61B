@@ -60,7 +60,7 @@ public class Repository {
 
         File fileBlob = join(BLOB_DIR, shaName);
 
-        // write the file already if it doesn't already exist
+        // write the file if it doesn't already exist
         if (!fileBlob.exists()) {
             // write the file with its hash as its name
             writeContents(fileBlob, content);
@@ -193,9 +193,8 @@ public class Repository {
             File commitFile = join(COMMITS_DIR, currentCommit);
             Commit commit = readObject(commitFile, Commit.class);
 
-            String commitMessage = commit.getMessage();
-            if (commitMessage.equals(message)) {
-                matched.add(commitMessage);
+            if (commit.getMessage().equals(message)) {
+                matched.add(currentCommit);
             }
         }
 
