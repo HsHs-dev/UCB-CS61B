@@ -110,7 +110,12 @@ public class Commit implements Serializable {
         return readObject(currentCommitFile, Commit.class);
     }
 
-    public boolean exists(String fileName) {
+    /**
+     * Check if the provided file is tracked by the commit
+     * @param fileName file name to be looked up
+     * @return true if the file is tracked by the commit
+     */
+    public boolean contains(String fileName) {
         return filesMap.containsKey(fileName);
     }
 
@@ -182,6 +187,15 @@ public class Commit implements Serializable {
      */
     public String getMessage() {
         return this.message;
+    }
+
+    /**
+     * Returns the value associated the fileName
+     * @param fileName the name of the file to look up its value
+     * @return the hash value associated with the file
+     */
+    public String getVal(String fileName) {
+        return filesMap.get(fileName);
     }
 
 

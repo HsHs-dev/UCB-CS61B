@@ -121,7 +121,7 @@ public class Repository {
 
         // stage the file for removal if it's tracked in the current commit
         Commit currentCommit = Commit.load();
-        boolean tracked = currentCommit.exists(fileName);
+        boolean tracked = currentCommit.contains(fileName);
         if (tracked) {
             stageArea.addRemoval(fileName);
 
@@ -236,6 +236,39 @@ public class Repository {
     }
 
     public static void checkout(String[] args) {
+
+        switch (args.length) {
+            case 2:
+//                checkoutBranch();
+                break;
+            case 3:
+                checkoutFile(args[2]);
+                break;
+            case 4:
+//                checkoutCommit();
+                break;
+        }
+    }
+    private static void checkoutFile(String fileName) {
+
+        // load the head commit
+        Commit headCommit = Commit.load();
+
+        // check if the file exists in the commit
+        if (!headCommit.contains(fileName)) {
+            System.out.println("File does not exist in that commit.");
+            System.exit(0);
+        }
+
+        // get the file from the blobs directory
+        String fileBlobName = headCommit.getVal(fileName);
+        File fileBlob = join(BLOB_DIR, fileBlobName);
+        byte[] content = readContents(fileBlob);
+
+        // overwrite the file in the CWD
+        File writtenFile = join(CWD, fileName);
+        writeContents(writtenFile, content);
+
     }
 
     public static void branch(String arg) {
