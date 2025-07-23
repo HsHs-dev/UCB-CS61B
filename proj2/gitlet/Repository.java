@@ -245,10 +245,11 @@ public class Repository {
                 checkoutFile(args[2]);
                 break;
             case 4:
-//                checkoutCommit();
+                checkoutCommit(args[1], args[3]);
                 break;
         }
     }
+
     private static void checkoutFile(String fileName) {
 
         // load the head commit
@@ -268,7 +269,32 @@ public class Repository {
         // overwrite the file in the CWD
         File writtenFile = join(CWD, fileName);
         writeContents(writtenFile, content);
+    }
 
+    private static void checkoutCommit(String id, String fileName) {
+
+        // check if the commit with the specified id exists
+        File commitFile = join(COMMITS_DIR, id);
+        if (!commitFile.exists()) {
+            System.out.println("No commit with that id exists.");
+            System.exit(0);
+        }
+
+        Commit commit = readObject(commitFile, Commit.class);
+        // check if the file exists in the commit
+        if (!commit.contains(fileName)) {
+            System.out.println("File does not exist in that commit.");
+            System.exit(0);
+        }
+
+        // get the file from the blobs directory
+        String fileBlobName = commit.getVal(fileName);
+        File fileBlob = join(BLOB_DIR, fileBlobName);
+        byte[] content = readContents(fileBlob);
+
+        // overwrite the file in the CWD
+        File writtenFile = join(CWD, fileName);
+        writeContents(writtenFile, content);
     }
 
     public static void branch(String arg) {
