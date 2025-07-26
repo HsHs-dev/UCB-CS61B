@@ -24,6 +24,9 @@ public class Repository {
     /** Commits folder */
     private static final File COMMITS_DIR = join(GITLET_DIR, "commits");
 
+    /** HEAD file */
+    private static final File HEAD_FILE = join(GITLET_DIR, "HEAD");
+
     /** Branches directory */
     private static final File BRANCHES_DIR = join(GITLET_DIR, "branches");
 
@@ -215,7 +218,17 @@ public class Repository {
 
         // branches
         System.out.println("=== Branches ===");
+
         List<String> branches = plainFilenamesIn(BRANCHES_DIR);
+        String currentBranch = readContentsAsString(HEAD_FILE);
+        for (String branch: branches) {
+            if (branch.equals(currentBranch)) {
+                System.out.println("*" + branch);
+                continue;
+            }
+            System.out.println(branch);
+        }
+        System.out.println();
 
         // staged for addition files
         System.out.println("=== Staged Files ===");
@@ -301,7 +314,19 @@ public class Repository {
         writeContents(writtenFile, content);
     }
 
-    public static void branch(String arg) {
+    public static void branch(String branchName) {
+
+        // check if the branch already exists
+        File branch = join(BRANCHES_DIR, branchName);
+        if (branch.exists()) {
+            System.out.println("A branch with that name already exists.");
+            System.exit(0);
+        }
+
+        // create the branch and points it to the current head commit
+        String headCommit = readContentsAsString(Commit.getHead());
+        writeContents(branch, headCommit);
+
 
     }
 

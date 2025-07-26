@@ -56,7 +56,7 @@ public class Commit implements Serializable {
         }
         this.message = message;
         this.timestamp = writeTimestamp();
-        this.parent = Arrays.toString(readContents(HEAD_FILE));
+        this.parent = Arrays.toString(readContents(getHead()));
     }
 
 
@@ -82,7 +82,7 @@ public class Commit implements Serializable {
         File master = join(BRANCHES_DIR, "master");
         writeContents(master, this.hash);
 
-        // assign the head pointer
+        // assign the head pointer to the master branch
         writeContents(HEAD_FILE, "master");
     }
 
@@ -114,9 +114,17 @@ public class Commit implements Serializable {
      * @return the current commit (HEAD commit)
      */
     public static Commit load() {
-        String head = readContentsAsString(HEAD_FILE);
-        File currentCommitFile = join(COMMITS_DIR, head);
+        String headCommit = readContentsAsString(getHead());
+        File currentCommitFile = join(COMMITS_DIR, headCommit);
         return readObject(currentCommitFile, Commit.class);
+    }
+
+    /**
+     * @return the head branch file
+     */
+    public static File getHead() {
+        String head = readContentsAsString(HEAD_FILE);
+        return join(BRANCHES_DIR, head);
     }
 
     /**
@@ -166,7 +174,9 @@ public class Commit implements Serializable {
     public void addCommit() {
         this.hash = commitHash();
         commits.add(this.hash);
-        writeContents(HEAD_FILE, commits.getLast());
+        String head = readContentsAsString(HEAD_FILE);
+        File headBranch = join(BRANCHES_DIR, head);
+        writeContents(headBranch, commits.getLast());
     }
 
     /**
