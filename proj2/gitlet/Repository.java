@@ -255,8 +255,7 @@ public class Repository {
 
         switch (args.length) {
             case 2:
-              // TODO
-//                checkoutBranch();
+                checkoutBranch(args[1]);
                 break;
             case 3:
                 checkoutFile(args[2]);
@@ -273,10 +272,7 @@ public class Repository {
         Commit headCommit = Commit.load();
 
         // check if the file exists in the commit
-        if (!headCommit.contains(fileName)) {
-            System.out.println("File does not exist in that commit.");
-            System.exit(0);
-        }
+        checkCommitFile(headCommit, fileName);
 
         // get the file from the blobs directory
         String fileBlobName = headCommit.getVal(fileName);
@@ -299,10 +295,7 @@ public class Repository {
 
         Commit commit = readObject(commitFile, Commit.class);
         // check if the file exists in the commit
-        if (!commit.contains(fileName)) {
-            System.out.println("File does not exist in that commit.");
-            System.exit(0);
-        }
+        checkCommitFile(commit, fileName);
 
         // get the file from the blobs directory
         String fileBlobName = commit.getVal(fileName);
@@ -314,10 +307,41 @@ public class Repository {
         writeContents(writtenFile, content);
     }
 
+    private static void checkoutBranch(String branchName) {
+
+        File branch = join(BRANCHES_DIR, branchName);
+
+        // check if the branch exists
+        if (!branch.exists()) {
+            System.out.println("No such branch exists.");
+            System.exit(0);
+        }
+
+        String currentBranch = readContentsAsString(Commit.getHead());
+        // check if the checked-out branch is the current branch
+        if (branchName.equals(currentBranch)) {
+            System.out.println("No need to checkout the current branch.");
+            System.exit(0);
+        }
+
+        
+
+    }
+
+    private static void checkCommitFile(Commit commit, String fileName) {
+
+        if (!commit.contains(fileName)) {
+            System.out.println("File does not exist in that commit.");
+            System.exit(0);
+        }
+
+    }
+
     public static void branch(String branchName) {
 
-        // check if the branch already exists
         File branch = join(BRANCHES_DIR, branchName);
+
+        // check if the branch already exists
         if (branch.exists()) {
             System.out.println("A branch with that name already exists.");
             System.exit(0);
