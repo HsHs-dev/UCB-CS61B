@@ -22,11 +22,14 @@ public class Commit implements Serializable {
     /** The .gitlet directory. */
     private static final File GITLET_DIR = join(CWD, ".gitlet");
 
-    /** Commits folder */
+    /** Commits directory */
     private static final File COMMITS_DIR = join(GITLET_DIR, "commits");
 
     /** HEAD file */
     private static final File HEAD_FILE = join(GITLET_DIR, "HEAD");
+
+    /** Branches directory */
+    private static final File BRANCHES_DIR = join(GITLET_DIR, "branches");
 
     /** The message of this Commit. */
     private String message;
@@ -42,8 +45,6 @@ public class Commit implements Serializable {
 
     /** Commits list */
     public LinkedList<String> commits = new LinkedList<>();
-
-    /** Master branch */ // TODO
 
     /** Commit's hash value */
     private String hash;
@@ -69,12 +70,20 @@ public class Commit implements Serializable {
         // add the commit to the commits' tree
         commits.add(this.hash);
 
-        // write the object to the commits folder
+        // write the object to the commits directory
         File initObj = join(COMMITS_DIR, this.hash);
         writeObject(initObj, this);
 
         // assign the HEAD pointer
         writeContents(HEAD_FILE, this.hash);
+
+        // create the branches directory with default master branch
+        BRANCHES_DIR.mkdir();
+        File master = join(BRANCHES_DIR, "master");
+        writeContents(master, this.hash);
+
+        // assign the head pointer
+        writeContents(HEAD_FILE, "master");
     }
 
     private String writeTimestamp() {

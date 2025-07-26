@@ -24,6 +24,9 @@ public class Repository {
     /** Commits folder */
     private static final File COMMITS_DIR = join(GITLET_DIR, "commits");
 
+    /** Branches directory */
+    private static final File BRANCHES_DIR = join(GITLET_DIR, "branches");
+
     public static void init() {
 
         // check if a gitlet repo already exists
@@ -212,7 +215,7 @@ public class Repository {
 
         // branches
         System.out.println("=== Branches ===");
-        System.out.println("*master\n");
+        List<String> branches = plainFilenamesIn(BRANCHES_DIR);
 
         // staged for addition files
         System.out.println("=== Staged Files ===");
@@ -239,6 +242,7 @@ public class Repository {
 
         switch (args.length) {
             case 2:
+              // TODO
 //                checkoutBranch();
                 break;
             case 3:
@@ -298,6 +302,7 @@ public class Repository {
     }
 
     public static void branch(String arg) {
+
     }
 
     public static void removeBranch(String arg) {
