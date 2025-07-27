@@ -9,8 +9,6 @@ import java.util.*;
 import static gitlet.Utils.*;
 
 /** Represents a gitlet commit object.
- *  TODO: It's a good idea to give a description here of what else this Class
- *  does at a high level.
  *
  *  @author Hassan Siddig
  */
@@ -44,17 +42,17 @@ public class Commit implements Serializable {
     private Map<String, String> filesMap = new TreeMap<>();
 
     /** Commits list */
-    public LinkedList<String> commits = new LinkedList<>();
+    private LinkedList<String> commits = new LinkedList<>();
 
     /** Commit's hash value */
     private String hash;
 
-    public Commit(String message) {
+    public Commit(String commitMessage) {
         if (!COMMITS_DIR.exists()) {
-            init(message);
+            init(commitMessage);
             return;
         }
-        this.message = message;
+        this.message = commitMessage;
         this.timestamp = writeTimestamp();
         this.parent = Arrays.toString(readContents(getHead()));
     }
@@ -222,6 +220,10 @@ public class Commit implements Serializable {
      */
     public static void checkout(String branchName) {
         writeContents(HEAD_FILE, branchName);
+    }
+
+    public LinkedList<String> getCommits() {
+        return new LinkedList<>(commits);
     }
 
 }

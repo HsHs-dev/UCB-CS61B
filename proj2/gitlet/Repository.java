@@ -6,8 +6,6 @@ import static gitlet.Utils.*;
 import java.util.*;
 
 /** Represents a gitlet repository.
- *  TODO: It's a good idea to give a description here of what else this Class
- *  does at a high level.
  *
  *  @author Hassan Siddig
  */
@@ -34,7 +32,8 @@ public class Repository {
 
         // check if a gitlet repo already exists
         if (GITLET_DIR.exists()) {
-            System.out.println("A Gitlet version-control system already exists in the current directory.");
+            System.out.println("A Gitlet version-control system already " +
+                    "exists in the current directory.");
             System.exit(0);
         }
 
@@ -148,7 +147,7 @@ public class Repository {
         // load the current commit
         Commit currentCommit = Commit.load();
 
-        LinkedList<String> list = currentCommit.commits;
+        LinkedList<String> list = currentCommit.getCommits();
         Iterator<String> iter = list.descendingIterator();
         while (iter.hasNext()) {
             String commit = iter.next();
@@ -250,6 +249,8 @@ public class Repository {
         }
         System.out.println();
 
+        System.out.println("=== Modifications Not Staged For Commit ===\n");
+        System.out.println("=== Untracked Files ===\n");
     }
 
     public static void checkout(String[] args) {
@@ -263,6 +264,8 @@ public class Repository {
                 break;
             case 4:
                 checkoutCommit(args[1], args[3]);
+                break;
+            default:
                 break;
         }
     }
@@ -321,8 +324,10 @@ public class Repository {
         }
 
 
-         // If a working file is untracked in the current branch and would be overwritten by the checkout,
-         // print There is an untracked file in the way; delete it, or add and commit it first. and exit;
+         // If a working file is untracked in the current branch
+         // and would be overwritten by the checkout,
+         // print There is an untracked file in the way;
+         // delete it, or add and commit it first. and exit;
 
         // cwd files
         List<String> cwdFiles = plainFilenamesIn(CWD);
@@ -339,8 +344,9 @@ public class Repository {
 
         for (String file: cwdFiles) {
             if (!headCommitFiles.containsKey(file) && targetCommitFiles.containsKey(file)) {
-                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
-                    System.exit(0);
+                System.out.println("There is an untracked file in the way; " +
+                        "delete it, or add and commit it first.");
+                System.exit(0);
             }
         }
 
@@ -397,10 +403,32 @@ public class Repository {
         writeContents(branch, headCommit);
     }
 
-    public static void removeBranch(String arg) {
+    public static void removeBranch(String branchName) {
+
+        List<String> branches = plainFilenamesIn(BRANCHES_DIR);
+
+        // check if the branch exists
+        if (!branches.contains(branchName)) {
+            System.out.println("A branch with that name does not exist.");
+            System.exit(0);
+        }
+
+        // check if the to be removed branch is the current branch
+        String currentBranch = readContentsAsString(HEAD_FILE);
+        if (currentBranch.equals(branchName)) {
+            System.out.println("Cannot remove the current branch.");
+            System.exit(0);
+        }
+
+        // remove the branch from the branches directory
+        File branchFile = join(BRANCHES_DIR, branchName);
+        /* Couldn't use the restrictedDelete method because it's meant for CWD files */
+        branchFile.delete();
+
     }
 
     public static void reset(String arg) {
+
     }
 
     public static void merge(String arg) {
