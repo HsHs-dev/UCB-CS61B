@@ -60,6 +60,7 @@ public class Commit implements Serializable {
     }
 
 
+
     private void init(String message) {
         COMMITS_DIR.mkdir();
         this.timestamp = "Thu Jan 1 00:00:00 1970 +0000";
@@ -208,5 +209,19 @@ public class Commit implements Serializable {
         return filesMap.get(fileName);
     }
 
+    /**
+     * @return a map of tracked files by this commit
+     */
+    public Map<String, String> getFiles() {
+        return new TreeMap<>(filesMap);
+    }
+
+    /**
+     * change the head pointer to the given branchName
+     * @param branchName the branch name
+     */
+    public static void checkout(String branchName) {
+        writeContents(HEAD_FILE, branchName);
+    }
 
 }

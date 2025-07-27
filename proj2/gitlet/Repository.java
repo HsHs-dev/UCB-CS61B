@@ -295,17 +295,12 @@ public class Repository {
         }
 
         Commit commit = readObject(commitFile, Commit.class);
+
         // check if the file exists in the commit
         checkCommitFile(commit, fileName);
 
-        // get the file from the blobs directory
-        String fileBlobName = commit.getVal(fileName);
-        File fileBlob = join(BLOB_DIR, fileBlobName);
-        byte[] content = readContents(fileBlob);
-
-        // overwrite the file in the CWD
-        File writtenFile = join(CWD, fileName);
-        writeContents(writtenFile, content);
+        // write the file to the cwd
+        writeFile(commit.getVal(fileName), fileName);
     }
 
     private static void checkoutBranch(String branchName) {
@@ -328,20 +323,64 @@ public class Repository {
 
          // If a working file is untracked in the current branch and would be overwritten by the checkout,
          // print There is an untracked file in the way; delete it, or add and commit it first. and exit;
+
+        // cwd files
         List<String> cwdFiles = plainFilenamesIn(CWD);
 
+        // current commit files
+        Commit headCommit = Commit.load();
+        Map<String, String> headCommitFiles = headCommit.getFiles();
 
+        // target commit files
+        String targetCommitFileName = readContentsAsString(branch);
+        File targetCommitFile = join(COMMITS_DIR, targetCommitFileName);
+        Commit targetCommit = readObject(targetCommitFile, Commit.class);
+        Map<String, String> targetCommitFiles = targetCommit.getFiles();
+
+        for (String file: cwdFiles) {
+            if (!headCommitFiles.containsKey(file) && targetCommitFiles.containsKey(file)) {
+                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                    System.exit(0);
+            }
+        }
+
+        // delete the files in the cwd that aren't in target commit
+        for (String file: cwdFiles) {
+            if (!targetCommitFiles.containsKey(file)) {
+                restrictedDelete(file);
+            }
+        }
+
+        // write the files tracked by the target commit to the cwd
+        for (Map.Entry<String, String> file: targetCommitFiles.entrySet()) {
+            writeFile(file.getValue(), file.getKey());
+        }
+
+        // change the head pointer to the new branch
+        Commit.checkout(branchName);
+
+        // clear the staging area
+        Staging staging = Staging.load();
+        staging.clear();
 
     }
 
     private static void checkCommitFile(Commit commit, String fileName) {
-
         if (!commit.contains(fileName)) {
             System.out.println("File does not exist in that commit.");
             System.exit(0);
         }
-
     }
+
+    private static void writeFile(String fileVal, String fileName) {
+
+        File fileBlob = join(BLOB_DIR, fileVal);
+        byte[] content = readContents(fileBlob);
+
+        File writtenFile = join(CWD, fileName);
+        writeContents(writtenFile, content);
+    }
+
 
     public static void branch(String branchName) {
 
@@ -356,8 +395,6 @@ public class Repository {
         // create the branch and points it to the current head commit
         String headCommit = readContentsAsString(Commit.getHead());
         writeContents(branch, headCommit);
-
-
     }
 
     public static void removeBranch(String arg) {
