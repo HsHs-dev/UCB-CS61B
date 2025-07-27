@@ -73,7 +73,8 @@ public class Repository {
         }
 
         // if the file exists in the current commit don't add it to the staging area
-        String currCommitFileHash = Commit.getFile(addedFile);
+        Commit currCommit = Commit.load();
+        String currCommitFileHash = currCommit.getVal(addedFile);
         if (currCommitFileHash != null && currCommitFileHash.equals(shaName)) {
             return;
         }
@@ -324,7 +325,12 @@ public class Repository {
             System.exit(0);
         }
 
-        
+
+         // If a working file is untracked in the current branch and would be overwritten by the checkout,
+         // print There is an untracked file in the way; delete it, or add and commit it first. and exit;
+        List<String> cwdFiles = plainFilenamesIn(CWD);
+
+
 
     }
 

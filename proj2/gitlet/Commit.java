@@ -94,15 +94,6 @@ public class Commit implements Serializable {
         return now.format(formatter);
     }
 
-    /**
-     * @param fileName the name of the file to be looked up
-     * @return the associated hash value
-     */
-    public static String getFile(String fileName) {
-        Commit parentCommit = load();
-        return parentCommit.filesMap.get(fileName);
-    }
-
     /** Copy the files of the current parent */
     public void copyParentFiles() {
         Commit parentCommit = load();
@@ -209,7 +200,7 @@ public class Commit implements Serializable {
     }
 
     /**
-     * Returns the value associated the fileName
+     * Returns the value associated with the fileName
      * @param fileName the name of the file to look up its value
      * @return the hash value associated with the file
      */
