@@ -28,12 +28,15 @@ public class Repository {
     /** Branches directory */
     private static final File BRANCHES_DIR = join(GITLET_DIR, "branches");
 
+    /** Shortened commits' ids directory */
+    private static final File SHORT = join(GITLET_DIR, "short");
+
     public static void init() {
 
         // check if a gitlet repo already exists
         if (GITLET_DIR.exists()) {
-            System.out.println("A Gitlet version-control system already " +
-                    "exists in the current directory.");
+            System.out.println("A Gitlet version-control system already "
+                    + "exists in the current directory.");
             System.exit(0);
         }
 
@@ -123,6 +126,9 @@ public class Repository {
 
         // write the commit
         newCommit.writeCommit();
+
+        // write the commit to the short commit directory
+        newCommit.writeShort();
     }
 
     public static void remove(String fileName) {
@@ -314,12 +320,12 @@ public class Repository {
 
     private static void checkoutCommit(String id, String fileName) {
 
+        // get the full commit id if the id is shortened
+        id = checkShort(id);
+
         // check if the commit with the specified id exists
         File commitFile = join(COMMITS_DIR, id);
-        if (!commitFile.exists()) {
-            System.out.println("No commit with that id exists.");
-            System.exit(0);
-        }
+        checkCommit(commitFile);
 
         Commit commit = readObject(commitFile, Commit.class);
 
@@ -328,6 +334,34 @@ public class Repository {
 
         // write the file to the cwd
         writeFile(commit.getVal(fileName), fileName);
+    }
+
+    private static void checkCommit(File commit) {
+        if (!commit.exists()) {
+            System.out.println("No commit with that id exists.");
+            System.exit(0);
+        }
+    }
+
+    private static String checkShort(String id) {
+
+        if (id.length() == 40) {
+            return id;
+        }
+
+        id = id.substring(0, Math.min(6, id.length()));
+
+        List<String> shortCommits = plainFilenamesIn(SHORT);
+        for (String file: shortCommits) {
+            if (file.equals(id)) {
+                return readContentsAsString(join(SHORT, file));
+            }
+        }
+
+        File commitFile = join(COMMITS_DIR, "null");
+        checkCommit(commitFile);
+
+        return null;
     }
 
     private static void checkoutBranch(String branchName) {
@@ -376,8 +410,8 @@ public class Repository {
 
         for (String file: cwdFiles) {
             if (!headCommitFiles.containsKey(file) && targetCommitFiles.containsKey(file)) {
-                System.out.println("There is an untracked file in the way; " +
-                        "delete it, or add and commit it first.");
+                System.out.println("There is an untracked file in the way; "
+                        + "delete it, or add and commit it first.");
                 System.exit(0);
             }
         }
@@ -466,13 +500,13 @@ public class Repository {
         // check if a .gitlet dir exists
         checkInit();
 
+        // get the full commit id if the id is shortened
+        id = checkShort(id);
+
         File commitFile = join(COMMITS_DIR, id);
 
         // check if the commit exist
-        if (!commitFile.exists()) {
-            System.out.println("No commit with that id exists.");
-            System.exit(0);
-        }
+        checkCommit(commitFile);
 
         // checking out the commit files
         checkoutCommID(id);
@@ -485,7 +519,7 @@ public class Repository {
     }
 
     public static void merge(String arg) {
-        
+
         // check if a .gitlet dir exists
         checkInit();
 

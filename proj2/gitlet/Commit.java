@@ -29,6 +29,9 @@ public class Commit implements Serializable {
     /** Branches directory */
     private static final File BRANCHES_DIR = join(GITLET_DIR, "branches");
 
+    /** Shortened commits' ids directory */
+    private static final File SHORT = join(GITLET_DIR, "short");
+
     /** The message of this Commit. */
     private String message;
 
@@ -59,19 +62,24 @@ public class Commit implements Serializable {
 
 
 
-    private void init(String message) {
-        COMMITS_DIR.mkdir();
+    private void init(String commitMessage) {
         this.timestamp = "Thu Jan 1 00:00:00 1970 +0000";
         this.parent = null;
-        this.message = message;
+        this.message = commitMessage;
         this.hash = commitHash();
 
         // add the commit to the commits' tree
         commits.add(this.hash);
 
         // write the object to the commits directory
-        File initObj = join(COMMITS_DIR, this.hash);
-        writeObject(initObj, this);
+        COMMITS_DIR.mkdir();
+        File initCommit = join(COMMITS_DIR, this.hash);
+        writeObject(initCommit, this);
+
+        // write the shortened commit's id to short directory
+        SHORT.mkdir();
+        File shortInitCommit = join(SHORT, this.hash.substring(0, 6));
+        writeContents(shortInitCommit, this.hash);
 
         // assign the HEAD pointer
         writeContents(HEAD_FILE, this.hash);
@@ -222,8 +230,18 @@ public class Commit implements Serializable {
         writeContents(HEAD_FILE, branchName);
     }
 
+    /**
+     * @return the parents' commit chain of this commit
+     */
     public LinkedList<String> getCommits() {
         return new LinkedList<>(commits);
     }
 
+    /**
+     * write the commit id to the shortened commits' id directory
+     */
+    public void writeShort() {
+        File shortCommit = join(SHORT, this.hash.substring(0, 6));
+        writeContents(shortCommit, this.hash);
+    }
 }
