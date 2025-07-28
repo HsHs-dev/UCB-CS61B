@@ -46,6 +46,9 @@ public class Repository {
 
     public static void add(String addedFile) {
 
+        // check if a .gitlet dir exists
+        checkInit();
+
         File file = new File(CWD, addedFile);
 
         // check if the file exist
@@ -85,6 +88,9 @@ public class Repository {
 
     public static void commit(String message) {
 
+        // check if a .gitlet dir exists
+        checkInit();
+
         // check if the commit message is blank
         // a blank commit message is either empty or only contains whitespaces
         if (message.isBlank()) {
@@ -121,6 +127,9 @@ public class Repository {
 
     public static void remove(String fileName) {
 
+        // check if a .gitlet dir exists
+        checkInit();
+
         // remove the file from the staging area if it's staged for addition
         Staging stageArea = Staging.load();
         String wasStaged = stageArea.removeStaged(fileName);
@@ -144,6 +153,9 @@ public class Repository {
 
     public static void log() {
 
+        // check if a .gitlet dir exists
+        checkInit();
+
         // load the current commit
         Commit currentCommit = Commit.load();
 
@@ -163,6 +175,9 @@ public class Repository {
     }
 
     public static void globalLog() {
+
+        // check if a .gitlet dir exists
+        checkInit();
 
         // store all the commits in a list
         List<String> commits = plainFilenamesIn(COMMITS_DIR);
@@ -186,6 +201,9 @@ public class Repository {
     }
 
     public static void find(String message) {
+
+        // check if a .gitlet dir exists
+        checkInit();
 
         List<String> commits = plainFilenamesIn(COMMITS_DIR);
 
@@ -215,6 +233,9 @@ public class Repository {
     }
 
     public static void status() {
+
+        // check if a .gitlet dir exists
+        checkInit();
 
         // branches
         System.out.println("=== Branches ===");
@@ -254,6 +275,9 @@ public class Repository {
     }
 
     public static void checkout(String[] args) {
+
+        // check if a .gitlet dir exists
+        checkInit();
 
         switch (args.length) {
             case 2:
@@ -323,11 +347,20 @@ public class Repository {
             System.exit(0);
         }
 
+        String commitId = readContentsAsString(branch);
+        checkoutCommID(commitId);
 
-         // If a working file is untracked in the current branch
-         // and would be overwritten by the checkout,
-         // print There is an untracked file in the way;
-         // delete it, or add and commit it first. and exit;
+        // change the head pointer to the new branch
+        Commit.checkout(branchName);
+    }
+
+
+    private static void checkoutCommID(String commitId) {
+
+        // If a working file is untracked in the current branch
+        // and would be overwritten by the checkout,
+        // print There is an untracked file in the way;
+        // delete it, or add and commit it first. and exit;
 
         // cwd files
         List<String> cwdFiles = plainFilenamesIn(CWD);
@@ -337,8 +370,7 @@ public class Repository {
         Map<String, String> headCommitFiles = headCommit.getFiles();
 
         // target commit files
-        String targetCommitFileName = readContentsAsString(branch);
-        File targetCommitFile = join(COMMITS_DIR, targetCommitFileName);
+        File targetCommitFile = join(COMMITS_DIR, commitId);
         Commit targetCommit = readObject(targetCommitFile, Commit.class);
         Map<String, String> targetCommitFiles = targetCommit.getFiles();
 
@@ -362,13 +394,9 @@ public class Repository {
             writeFile(file.getValue(), file.getKey());
         }
 
-        // change the head pointer to the new branch
-        Commit.checkout(branchName);
-
         // clear the staging area
         Staging staging = Staging.load();
         staging.clear();
-
     }
 
     private static void checkCommitFile(Commit commit, String fileName) {
@@ -390,6 +418,9 @@ public class Repository {
 
     public static void branch(String branchName) {
 
+        // check if a .gitlet dir exists
+        checkInit();
+
         File branch = join(BRANCHES_DIR, branchName);
 
         // check if the branch already exists
@@ -404,6 +435,9 @@ public class Repository {
     }
 
     public static void removeBranch(String branchName) {
+
+        // check if a .gitlet dir exists
+        checkInit();
 
         List<String> branches = plainFilenamesIn(BRANCHES_DIR);
 
@@ -427,11 +461,41 @@ public class Repository {
 
     }
 
-    public static void reset(String arg) {
+    public static void reset(String id) {
+
+        // check if a .gitlet dir exists
+        checkInit();
+
+        File commitFile = join(COMMITS_DIR, id);
+
+        // check if the commit exist
+        if (!commitFile.exists()) {
+            System.out.println("No commit with that id exists.");
+            System.exit(0);
+        }
+
+        // checking out the commit files
+        checkoutCommID(id);
+
+        // move the current branch's head to the commit
+        String branch = readContentsAsString(HEAD_FILE);
+        File branchFile = join(BRANCHES_DIR, branch);
+        writeContents(branchFile, id);
 
     }
 
     public static void merge(String arg) {
+        
+        // check if a .gitlet dir exists
+        checkInit();
+
+    }
+
+    private static void checkInit() {
+        if (!GITLET_DIR.exists()) {
+            System.out.println("Not in an initialized Gitlet directory.");
+            System.exit(0);
+        }
     }
 
 }
