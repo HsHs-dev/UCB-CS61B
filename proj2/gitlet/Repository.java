@@ -374,7 +374,7 @@ public class Repository {
             System.exit(0);
         }
 
-        String currentBranch = readContentsAsString(Commit.getHead());
+        String currentBranch = readContentsAsString(HEAD_FILE);
         // check if the checked-out branch is the current branch
         if (branchName.equals(currentBranch)) {
             System.out.println("No need to checkout the current branch.");
