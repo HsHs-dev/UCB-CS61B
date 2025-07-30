@@ -41,3 +41,5 @@ Some of the taught data structures (like dijoint sets) are not implemented in le
 - [x] Project 0: 2048 Game
 - [x] Project 1: Data Structures
 - [ ] Project 1 Extra Credit: Autograding
+- [ ] Project 2: Gitlet
+- [ ] Project 3: CS61BYoW
