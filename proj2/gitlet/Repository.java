@@ -52,6 +52,11 @@ public class Repository {
         // check if a .gitlet dir exists
         checkInit();
 
+        // check if the file is staged for removal
+        if (getBack(addedFile)) {
+            return;
+        }
+
         File file = new File(CWD, addedFile);
 
         // check if the file exist
@@ -87,6 +92,21 @@ public class Repository {
         // add the file to the staging area
         Staging stage = Staging.load();
         stage.addition(addedFile, shaName);
+    }
+
+    private static boolean getBack(String fileName) {
+
+        // check if the file is staged for removal
+        Staging staging = Staging.load();
+        if (staging.removeRemoval(fileName)) {
+           Commit headCommit = Commit.load();
+           String fileVal = headCommit.getVal(fileName);
+           writeFile(fileVal, fileName);
+           return true;
+        }
+
+        return false;
+
     }
 
     public static void commit(String message) {

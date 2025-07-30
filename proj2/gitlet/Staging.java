@@ -24,13 +24,13 @@ public class Staging implements Serializable {
     /** Represents the files that are staged for removal */
     private Set<String> removeStaged = new TreeSet<>();
 
-    /** add a file to the staging area */
+    /** add a file to the staging for addition area */
     public void addition(String fileName, String fileHash) {
         addStaged.put(fileName, fileHash);
         saveStaging();
     }
 
-    /** Remove a file from the staging area */
+    /** Remove a file from the staging for addition area */
     public String removeStaged(String fileName) {
         String staged = addStaged.remove(fileName);
         saveStaging();
@@ -41,6 +41,13 @@ public class Staging implements Serializable {
     public void addRemoval(String fileName) {
         removeStaged.add(fileName);
         saveStaging();
+    }
+
+    /** Remove the fileName from the staged for removal area */
+    public boolean removeRemoval(String fileName) {
+        boolean staged = removeStaged.remove(fileName);
+        saveStaging();
+        return staged;
     }
 
     /** write the current object to .gitlet/staged file */
