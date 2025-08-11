@@ -23,7 +23,7 @@ I am not much of a *notes guy*, that's why I prefer *getting your hands dirty co
 
 ## Data Structures Implementations
 
-Some of the taught data structures (like dijoint sets) are not implemented in lectures neither in a lab as an assignment, my implementations to them can be found [here](https://github.com/HsHs-dev/Algorithms)
+Some of the taught data structures (like dijoint sets) are not implemented in lectures neither in a lab as an assignment, my implementations to them and other Data Structures can be found [here](https://github.com/HsHs-dev/Algorithms)
 
 ## Labs
 
