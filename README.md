@@ -7,7 +7,7 @@ I am taking the [2021 version](https://sp21.datastructur.es/) of the course, bec
 The course uses Java to teach, and is composed of:
 
 - 40 lectures
-- 14 Labs
+- 8 Labs
 - 4 Projects
 - 2 Midterms
 - Final Exam
