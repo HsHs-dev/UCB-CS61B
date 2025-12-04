@@ -574,8 +574,8 @@ public class Repository {
         Map<String, String> headCommitFiles = headCommit.getFiles();
 
         // target commit files
-        File targetBranchCommit = join(BRANCHES_DIR, branchName);
-        String commitId = readContentsAsString(targetBranchCommit);
+        File targetBranchFile = join(BRANCHES_DIR, branchName);
+        String commitId = readContentsAsString(targetBranchFile);
         File targetCommitFile = join(COMMITS_DIR, commitId);
         Commit targetCommit = readObject(targetCommitFile, Commit.class);
         Map<String, String> targetCommitFiles = targetCommit.getFiles();
@@ -588,7 +588,55 @@ public class Repository {
             }
         }
 
+        // If the split point is the same commit as the given branch, then we do nothing;
+        // the merge is complete, and the operation ends with the message
+        // Given branch is an ancestor of the current branch.
+        String latestCommonAncestor = findLatestCommonAncestor(headCommit, targetCommit);
+        String givenBranch = readContentsAsString(targetBranchFile);
+        if (latestCommonAncestor.equals(givenBranch)) {
+            System.out.println("Given branch is an ancestor of the current branch.");
+            return;
+        }
+    }
 
+    private static String findLatestCommonAncestor(Commit currentCommit, Commit targetCommit) {
+
+        LinkedList<String> currentAncestors = currentCommit.getCommits();
+        Iterator<String> currentIter = currentAncestors.descendingIterator();
+
+        LinkedList<String> branchAncestors = targetCommit.getCommits();
+        Iterator<String> branchIter = branchAncestors.descendingIterator();
+
+        System.out.println("current branch ancestors are: ");
+        while (currentIter.hasNext()) {
+            System.out.println(currentIter.next());
+        }
+
+        System.out.println();
+
+        System.out.println("target branch ancestors are: ");
+        while(branchIter.hasNext()) {
+            System.out.println(branchIter.next());
+        }
+
+        System.out.println();
+
+        currentIter = currentAncestors.descendingIterator();
+        branchIter = branchAncestors.descendingIterator();
+
+        while (currentIter.hasNext()) {
+            String currentAncestor = currentIter.next();
+            while (branchIter.hasNext()) {
+                String branchAncestor = branchIter.next();
+                if (currentAncestor.equals(branchAncestor)) {
+                    System.out.println("Latest Common ancestor is " + branchAncestor);
+                    return branchAncestor;
+                }
+            }
+            branchIter = branchAncestors.descendingIterator();
+        }
+
+        return null;
     }
 
     private static void checkInit() {
