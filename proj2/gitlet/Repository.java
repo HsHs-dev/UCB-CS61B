@@ -575,8 +575,8 @@ public class Repository {
 
         // target commit files
         File targetBranchFile = join(BRANCHES_DIR, branchName);
-        String commitId = readContentsAsString(targetBranchFile);
-        File targetCommitFile = join(COMMITS_DIR, commitId);
+        String targetCommitId = readContentsAsString(targetBranchFile);
+        File targetCommitFile = join(COMMITS_DIR, targetCommitId);
         Commit targetCommit = readObject(targetCommitFile, Commit.class);
         Map<String, String> targetCommitFiles = targetCommit.getFiles();
 
@@ -588,15 +588,24 @@ public class Repository {
             }
         }
 
+        String latestCommonAncestor = findLatestCommonAncestor(headCommit, targetCommit);
+
         // If the split point is the same commit as the given branch, then we do nothing;
         // the merge is complete, and the operation ends with the message
         // Given branch is an ancestor of the current branch.
-        String latestCommonAncestor = findLatestCommonAncestor(headCommit, targetCommit);
-        String givenBranch = readContentsAsString(targetBranchFile);
-        if (latestCommonAncestor.equals(givenBranch)) {
+        if (latestCommonAncestor.equals(targetCommitId)) {
             System.out.println("Given branch is an ancestor of the current branch.");
             return;
         }
+
+        // If the split point is the current branch, then the effect is to check out the given branch,
+        // and the operation ends after printing the message Current branch fast-forwarded.
+        String currentBranchHash = readContentsAsString(join(BRANCHES_DIR, currentBranch));
+        if (latestCommonAncestor.equals(currentBranchHash)) {
+            checkoutCommID(targetCommitId);
+            System.out.println("Current branch fast-forwarded.");
+        }
+
     }
 
     private static String findLatestCommonAncestor(Commit currentCommit, Commit targetCommit) {
@@ -630,6 +639,7 @@ public class Repository {
                 String branchAncestor = branchIter.next();
                 if (currentAncestor.equals(branchAncestor)) {
                     System.out.println("Latest Common ancestor is " + branchAncestor);
+                    System.out.println();
                     return branchAncestor;
                 }
             }
