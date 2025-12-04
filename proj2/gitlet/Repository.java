@@ -525,7 +525,7 @@ public class Repository {
 
         File commitFile = join(COMMITS_DIR, id);
 
-        // check if the commit exist
+        // check if the commit exists
         checkCommit(commitFile);
 
         // checking out the commit files
@@ -538,10 +538,57 @@ public class Repository {
 
     }
 
-    public static void merge(String arg) {
+    public static void merge(String branchName) {
 
         // check if a .gitlet dir exists
         checkInit();
+
+        // check if there is a staged for addition or removal files
+        Staging stageArea = Staging.load();
+        if (!stageArea.currAdd().isEmpty() && !stageArea.currRemove().isEmpty()) {
+            System.out.println("You have uncommitted changes.");
+            System.exit(0);
+        }
+
+        // check if the branch exists
+        List<String> branches = plainFilenamesIn(BRANCHES_DIR);
+        if (!branches.contains(branchName)) {
+            System.out.println("A branch with that name does not exist.");
+            System.exit(0);
+        }
+
+        // check if the given branch is the current branch
+        String currentBranch = readContentsAsString(HEAD_FILE);
+        if (branchName.equals(currentBranch)) {
+            System.out.println("Cannot merge a branch with itself.");
+            System.exit(0);
+        }
+
+        // If a working file is untracked in the current branch
+        // and would be overwritten by the checkout,
+        // print There is an untracked file in the way;
+        // delete it, or add and commit it first. and exit;
+
+        // cwd files
+        List<String> cwdFiles = plainFilenamesIn(CWD);
+
+        // current commit files
+        Commit headCommit = Commit.load();
+        Map<String, String> headCommitFiles = headCommit.getFiles();
+
+        // target commit files //TODO: branch commit files
+        File targetCommitFile = join(COMMITS_DIR, commitId);
+        Commit targetCommit = readObject(targetCommitFile, Commit.class);
+        Map<String, String> targetCommitFiles = targetCommit.getFiles();
+
+        for (String file: cwdFiles) {
+            if (!headCommitFiles.containsKey(file) && targetCommitFiles.containsKey(file)) {
+                System.out.println("There is an untracked file in the way; "
+                        + "delete it, or add and commit it first.");
+                System.exit(0);
+            }
+        }
+
 
     }
 
