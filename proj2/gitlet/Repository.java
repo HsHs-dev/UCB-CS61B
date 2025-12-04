@@ -565,18 +565,17 @@ public class Repository {
         }
 
         // If a working file is untracked in the current branch
-        // and would be overwritten by the checkout,
+        // and would be overwritten by the merge,
         // print There is an untracked file in the way;
         // delete it, or add and commit it first. and exit;
-
-        // cwd files
         List<String> cwdFiles = plainFilenamesIn(CWD);
-
         // current commit files
         Commit headCommit = Commit.load();
         Map<String, String> headCommitFiles = headCommit.getFiles();
 
-        // target commit files //TODO: branch commit files
+        // target commit files
+        File targetBranchCommit = join(BRANCHES_DIR, branchName);
+        String commitId = readContentsAsString(targetBranchCommit);
         File targetCommitFile = join(COMMITS_DIR, commitId);
         Commit targetCommit = readObject(targetCommitFile, Commit.class);
         Map<String, String> targetCommitFiles = targetCommit.getFiles();
